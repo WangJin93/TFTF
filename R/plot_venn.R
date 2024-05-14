@@ -20,7 +20,10 @@ plot_venn <- function(inter_data,
                       font_size = 1,
                       lwd =2,
                       linetype = 2){
-  dev.off()
+
+    if (length(dev.list()) > 0) {
+    dev.off()
+    }
   dd <- which(names(inter_data)=="intersection")
   if (length(dd)!=0){
     inter_data <- inter_data[-which(names(inter_data)=="intersection")]
