@@ -103,7 +103,7 @@ ui.modules_net <- function(id) {
                    br(),
                    shinyjs::useShinyjs(),  # Set up shinyjs
                    shinycssloaders::withSpinner(DTOutput(outputId = ns("tf_results"))),
-                     downloadButton(ns("download_tf_results.csv"), "Download csv table",class = "mybutton")
+                   shinyWidgets::downloadBttn(ns("download_tf_results.csv"), "Download csv table")
                    ),
           tabPanel('TF-target network',	value = "net",
                    br(),
@@ -136,7 +136,7 @@ ui.modules_net <- function(id) {
 
                           shinycssloaders::withSpinner(plotOutput(ns("network"), height = "600px", width = "600px")),
                           shinyjs::hidden(
-                            downloadButton(ns("download"), "Download Figure",class = "mybutton")
+                            shinyWidgets::downloadBttn(ns("download"), "Download Figure")
                           ),
                           tags$head(tags$style(".mybutton{background-color:aliceblue;} .mybutton2{background-color:antiquewhite;} .skin-black .sidebar .mybutton{color: green;}") )
 
@@ -149,7 +149,7 @@ ui.modules_net <- function(id) {
                    shinycssloaders::withSpinner(DTOutput(outputId = ns("plot.data"))),
                    hr(),
                    shinyjs::hidden(
-                     downloadButton(ns("download.data"), "Download individual data",class = "mybutton")
+                     shinyWidgets::downloadBttn(ns("download.data"), "Download individual data")
                    ),
                    tags$head(tags$style(".mybutton{background-color:aliceblue;} .mybutton2{background-color:antiquewhite;} .skin-black .sidebar .mybutton{color: green;}") )
 

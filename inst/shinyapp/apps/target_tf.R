@@ -94,7 +94,7 @@ ui.modules_target <- function(id) {
                    HTML("<hr>"),
                    shinycssloaders::withSpinner(DTOutput(outputId = ns("results"))),
                    shinyjs::hidden(
-                     downloadButton(ns("download.csv"), "Download csv table",class = "mybutton")
+                     shinyWidgets::downloadBttn(ns("download.csv"), "Download csv table")
                    )),
           tabPanel('Venn diagram',
                    br(),
@@ -126,7 +126,7 @@ ui.modules_target <- function(id) {
                    column(8,align="center",
                           shinycssloaders::withSpinner(plotOutput(ns("venn_diagram"), height = "600px", width = "600px")),
                           shinyjs::hidden(
-                            downloadButton(ns("download"), "Download Figure",class = "mybutton")
+                            shinyWidgets::downloadBttn(ns("download"), "Download Figure")
                           )
 
                    )#column
@@ -155,7 +155,7 @@ ui.modules_target <- function(id) {
                    shinycssloaders::withSpinner(DTOutput(outputId = ns("individual_data"))),
                    hr(),
                    shinyjs::hidden(
-                     downloadButton(ns("download.individual"), "Download individual data",class = "mybutton")
+                     shinyWidgets::downloadBttn(ns("download.individual"), "Download individual data")
                    ),
                    tags$head(tags$style(".mybutton{background-color:aliceblue;} .mybutton2{background-color:antiquewhite;} .skin-black .sidebar .mybutton{color: green;}") )
 
@@ -273,8 +273,8 @@ server.modules_target <- function(input, output, session) {
   })
   observe({
     updateSelectInput(session, "individua",
-                      choices =  names(TF_results()),
-                      selected =  names(TF_results())[1]
+                      choices =  names(TF_results()$results),
+                      selected =  names(TF_results()$results)[1]
     )
     updateSelectInput(session, "tables_venn",
                       choices =  names(TF_results()$results),

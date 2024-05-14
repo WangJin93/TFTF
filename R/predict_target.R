@@ -53,8 +53,8 @@ predict_target <- function(datasets=c("hTFtarget",
     if(is.null(hTFtarget[["targets"]][["ensemblgene"]] )){
       hTFtarget <-  character()
     }else{
-      hTFtarget <-  hTFtarget[["targets"]][["ensemblgene"]] %>%
-        dplyr::rename("Target" = "name")
+      # hTFtarget <-  hTFtarget[["targets"]][["ensemblgene"]] %>%
+      #   dplyr::rename("Target" = "name")
     }
 
     targets[["hTFtarget"]] <- hTFtarget %>% na.omit()

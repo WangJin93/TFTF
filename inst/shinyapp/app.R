@@ -1,24 +1,16 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
+
 library(shiny)
 library(waiter)
 library(ggplot2)
 library(ggpubr)
 library(dplyr)
 library(DT)
-library("httr")
-library("stringr")
-library("jsonlite")
+library(httr)
+library(stringr)
+library(jsonlite)
+library(shinyWidgets)
 library(VennDiagram)
 library(UCSCXenaShiny)
-library(RMySQL)
-# library(shinyWidgets)
 library(psych)
 library(igraph)
 library(ggraph)
@@ -29,6 +21,7 @@ source("apps/tf_target.R")
 source("apps/tf_target_net.R")
 source("apps/target_tf.R")
 source("apps/tcga_genecor.R")
+source("apps/tf_list.R")
 source("apps/feedback.R")
 # Define UI for application that draws a histogram
 ui <- dashboardPage(
@@ -40,9 +33,10 @@ ui <- dashboardPage(
     sidebarMenu(
       menuItem("Welcome",icon = icon("info-circle") , tabName = "Welcome"),
       menuItem("TF-->Targets",icon = icon('palette') , tabName ="TF"),
-      menuItem("Target-->TFs",icon = icon("th") , tabName ="Target"),
+      menuItem("Target-->TFs",icon = icon("palette") , tabName ="Target"),
       menuItem("Pan-tissue cor",icon = icon('deezer') , tabName ="tcga"),
       menuItem("TF-target net",icon = icon('glyphicon glyphicon-fullscreen',lib="glyphicon") , tabName ="Net"),
+      menuItem("TF list",icon = icon('th') , tabName ="tf_list"),
       menuItem("Feedback",icon = icon('envelope') , tabName ="feedback")
     )
   ),
@@ -54,6 +48,7 @@ ui <- dashboardPage(
       tabItem("Net",ui.modules_net("Net")),
       tabItem("Target",ui.modules_target("Target")),
       tabItem("tcga",ui.modules_tcga("tcga")),
+      tabItem("tf_list",ui.modules_tf_list("tf_list")),
       tabItem("feedback",mod_feedback_ui("feedback"))
     )
   )
@@ -67,6 +62,7 @@ server <- function(input, output) {
   callModule(server.modules_target, "Target")
   callModule(mod_feedback_server, "feedback")
   callModule(server.modules_tcga, "tcga")
+  callModule(server.modules_tf_list, "tf_list")
 
 }
 

@@ -55,7 +55,7 @@ ui.modules_tcga <- function(id) {
             choices = c("spearman", "pearson"),
             selected = "pearson"
           ),
-          sliderTextInput(
+          shinyWidgets::sliderTextInput(
             inputId = ns("xinter"),
             label = "Coefficient cutpoint:",
             choices = seq(
@@ -88,7 +88,7 @@ ui.modules_tcga <- function(id) {
       column(
         3,wellPanel(
 
-          sliderTextInput(
+          shinyWidgets::sliderTextInput(
             inputId = ns("alpha"),
             label = "Choose a transparent value",
             choices = seq(
@@ -99,7 +99,7 @@ ui.modules_tcga <- function(id) {
             selected = "0.5",
             grid = TRUE
           ),
-          sliderTextInput(
+          shinyWidgets::sliderTextInput(
             inputId = ns("size"),
             label = "Dot size value",
             choices = seq(
@@ -119,7 +119,7 @@ ui.modules_tcga <- function(id) {
         br(),
         wellPanel(
 
-          downloadBttn(
+          shinyWidgets::downloadBttn(
             outputId = ns("download"),
             style = "gradient",
             color = "default",
@@ -141,7 +141,7 @@ ui.modules_tcga <- function(id) {
         shinyjs::hidden(
           wellPanel(
             id = ns("save_csv"),
-            downloadButton(ns("downloadTable"), "Save as csv")
+            shinyWidgets::downloadBttn(ns("downloadTable"), "Save as csv")
           )
         )
       )

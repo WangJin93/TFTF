@@ -38,6 +38,6 @@ Correlation analysis between TF and target in pan-tissues in "TCGA", "GTEx" and 
 }
 \examples{
 \dontrun{
-results_inter <- pantissue_cor_analysis(Gene1 = "FOXM1",Gene2 = "GAPDH")
+cor_results <- pantissue_cor_analysis(Gene1 = "FOXM1",Gene2 = "GAPDH")
 }
 }

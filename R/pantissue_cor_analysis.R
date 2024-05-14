@@ -9,7 +9,7 @@
 #' @param cor_method Method used for correlation analysis, e.g. "pearson", "spearman".
 #' @examples
 #' \dontrun{
-#' results_inter <- pantissue_cor_analysis(Gene1 = "FOXM1",Gene2 = "GAPDH")
+#' cor_results <- pantissue_cor_analysis(Gene1 = "FOXM1",Gene2 = "GAPDH")
 #' }
 #' @export
 #'
