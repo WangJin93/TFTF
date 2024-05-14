@@ -1,17 +1,21 @@
 Package: TFTF
 Type: Package
-Title: Transcription Factor Target Prediction and Inverse Prediction R
-        Package
+Title: Transcription Factor Target Prediction and Inverse Prediction R Package
 Version: 0.1.0
 Author: Jin Wang
 Maintainer: Jin Wang <jin.wang93@outlook.com>
 Description: This R package, designed for transcription factor (TF) target gene prediction and inverse prediction, offers a comprehensive suite of tools integrating multiple online resources such as hTFTarget, KnockTF, TTRUST, as well as prediction results from transcription factor motif analysis tools like FIMO and PWMEnrich. Additionally, it incorporates correlation analysis based on sequencing data from The Cancer Genome Atlas (TCGA) and Genotype-Tissue Expression (GTEx) databases to enhance prediction accuracy. By leveraging various prediction algorithms and correlation analyses, this package facilitates the exploration of transcriptional regulatory networks, enabling a deeper understanding of gene expression regulation mechanisms.
 License: GPL-3
-Imports: dplyr (>= 0.8.3), RMySQL, RColorBrewer, jsonlite, tibble,
-        VennDiagram, grid, UCSCXenaShiny, ggplot2
+Imports: 
+    dplyr (>= 0.8.3),
+    RMySQL,
+    RColorBrewer,
+    jsonlite,
+    tibble,
+    VennDiagram,
+    grid,
+    UCSCXenaShiny,
+    ggplot2
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.1
-NeedsCompilation: no
-Packaged: 2024-05-14 05:11:06 UTC; JinWa
-Depends: R (>= 3.5.0)

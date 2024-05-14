@@ -1,8 +1,22 @@
-#' predict_target(tf = "STAT3")
-#' @import RMySQL
-#' @import dplyr
-#' @import jsonlite
-#' @import tibble
+#' @title Predict the target genes of TF
+#' @description
+#' destination description  Predict the target genes of Transcription Factor in multiple TF-target prediction databases and correlation analysis.
+#' @import RMySQL dplyr jsonlite tibble
+#' @param datasets Including the TF-target regulatory data of 7 public TF online tools and the TF-targets prediction results analyzed by using FIMO and PWMEnrich.
+#' @param tf Transcription factor name
+#' @param TCGA_tissue Cancer type in TCGA database, you can use tissue_type("TCGA") to abtain the tissue types.
+#' @param GTEx_tissue Cancer type in GTEx database, you can use tissue_type("GTEx") to abtain the tissue types.
+#' @param cor_DB The database used for the correlation analyze between TF and targets. You can use 2 databases, viz. TCGA (33 cancer types) and GTEx (31 normal tissue types).
+#' @param cor_cutoff Threshold of correlation coefficient for correlation analysis.
+#' @param FIMO.score Threshold of the score of the prediction TF-target results by using FIMO algorithm.
+#' @param PWMEnrich.score Threshold of the score of the prediction TF-target results by using PWMEnrich algorithm..
+#' @param cut.log2FC Threshold of log2FC for KnockTF dataset.
+#' @param down.only Logic value. If true, only the downregulated genes in TF knockout/knockdown cells were returned in KnockTF dataset.
+#' @param app Logic value. TRUE only used in the shiny app.
+#' @examples
+#' \dontrun{
+#' results <- predict_target(datasets=c("hTFtarget","KnockTF","FIMO_JASPAR","PWMEnrich_JASPAR"), cor_DB = c("TCGA","GTEx"),tf = "STAT3")
+#' }
 #' @export
 #'
 predict_target <- function(datasets=c("hTFtarget",
@@ -14,15 +28,16 @@ predict_target <- function(datasets=c("hTFtarget",
                                       "TRRUST",
                                       "GTRD",
                                       "ChIP_Atlas"),
-                           cor_DB = c("TCGA","GTEx"),
+                           tf = "STAT3",
                            TCGA_tissue = "COAD",
                            GTEx_tissue = "Colon",
+                           cor_DB = c("TCGA","GTEx"),
                            cor_cutoff = 0.3,
-                           tf = "STAT3",
                            FIMO.score=10,
-                           PWMEnrich_JASPAR.score =10,
+                           PWMEnrich.score =10,
                            cut.log2FC = 1,
-                           down.only = T){
+                           down.only = T,
+                           app = F){
   options(timeout=200)
   targets <- as.list(datasets)
   names(targets) <- datasets
@@ -30,7 +45,9 @@ predict_target <- function(datasets=c("hTFtarget",
   ###########HTFtarget
   if ("hTFtarget" %in% datasets){
     cat("Searching hTFtarget .... \n")
-    # showNotification("Searching hTFtarget .... ",duration = 3,type = "message")
+    if (isTRUE(app)){
+      showNotification("Searching hTFtarget .... ",duration = 2)
+    }
     url<-paste0("https://guolab.wchscu.cn/hTFtarget/api/chipseq/targets/tf?page=1&size=20000&tf=",tf)
     hTFtarget <- jsonlite::fromJSON(url)
     if(is.null(hTFtarget[["targets"]][["ensemblgene"]] )){
@@ -46,7 +63,9 @@ predict_target <- function(datasets=c("hTFtarget",
   ####TRRUST###
   if ("TRRUST" %in% datasets){
     cat("Searching TRRUST .... \n")
-    # showNotification("Searching TRRUST .... ",duration = 3,type = "message")
+    if (isTRUE(app)){
+      showNotification("Searching TRRUST .... ",duration = 2)
+    }
     TRRUST <- get_data("TRRUST","TF",tf)
 
     targets[["TRRUST"]] <- TRRUST %>% na.omit()
@@ -54,14 +73,18 @@ predict_target <- function(datasets=c("hTFtarget",
   ####ENCODE
   if ("ENCODE" %in% datasets){
     cat("Searching ENCODE .... \n")
-    # showNotification("Searching ENCODE .... ",duration = 3,type = "message")
+    if (isTRUE(app)){
+      showNotification("Searching ENCODE .... ",duration = 2)
+    }
     ENCODE <- get_data("ENCODE","TF",tf)
     targets[["ENCODE"]] <- ENCODE %>% na.omit()
   }
   ###JASPAR
   if ("FIMO_JASPAR" %in% datasets){
     cat("Searching FIMO_JASPAR .... \n")
-  # showNotification("Searching FIMO_JASPAR .... ",duration = 3,type = "message")
+    if (isTRUE(app)){
+      showNotification("Searching FIMO_JASPAR .... ",duration = 2)
+    }
     Jaspar <- get_data("FIMO_JASPAR","TF",tf)
     if (length(Jaspar) > 0){
       Jaspar <- Jaspar[Jaspar$score > FIMO.score,]
@@ -73,10 +96,12 @@ predict_target <- function(datasets=c("hTFtarget",
   ###PWMEnrich_JASPAR
   if ("PWMEnrich_JASPAR" %in% datasets){
     cat("Searching PWMEnrich_JASPAR .... \n")
-    # showNotification("Searching PWMEnrich_JASPAR .... ",duration = 3,type = "message")
+    if (isTRUE(app)){
+      showNotification("Searching PWMEnrich_JASPAR .... ",duration = 2)
+    }
     PWMEnrich_JASPAR <- get_data("PWMEnrich_JASPAR","TF",tf)
     if (length(PWMEnrich_JASPAR) > 0){
-      PWMEnrich_JASPAR <- PWMEnrich_JASPAR[PWMEnrich_JASPAR$raw.score > PWMEnrich_JASPAR.score,]
+      PWMEnrich_JASPAR <- PWMEnrich_JASPAR[PWMEnrich_JASPAR$raw.score > PWMEnrich.score,]
       PWMEnrich_JASPAR <- merge(PWMEnrich_JASPAR,refgene,by="Target")
       colnames(PWMEnrich_JASPAR)[c(1,5)] <- c("Target_refseq","Target")
     }
@@ -85,13 +110,19 @@ predict_target <- function(datasets=c("hTFtarget",
   ###CHEA
   if ("CHEA" %in% datasets){
     cat("Searching CHEA .... \n")
-    # showNotification("Searching CHEA .... ",duration = 3,type = "message")
+    if (isTRUE(app)){
+      showNotification("Fetching correlation results of TCGA .... ",duration = 2)
+    }
     CHEA <- get_data("CHEA","TF",tf)
     targets[["CHEA"]] <- CHEA %>% na.omit()
   }
   ####KnockTF##数据
   if ("KnockTF" %in% datasets){
     cat("Searching KnockTF .... \n")
+    if (isTRUE(app)){
+      showNotification("Searching KnockTF .... ",duration = 2)
+    }
+
     KnockTF <- get_data("knocktf","TF",tf)
     if (length(KnockTF) > 0){
 
@@ -111,14 +142,18 @@ predict_target <- function(datasets=c("hTFtarget",
   ####GTRD##数据
   if ("GTRD" %in% datasets){
     cat("Searching GTRD .... \n")
-    # showNotification("Searching GTRD .... ",duration = 3,type = "message")
+    if (isTRUE(app)){
+      showNotification("Searching GTRD .... ",duration = 2)
+    }
     GTRD <- get_data("GTRD","TF",tf)
     targets[["GTRD"]] <- GTRD %>% na.omit()
   }
   ####ChIP_Atlas##数据
   if ("ChIP_Atlas" %in% datasets){
     cat("Searching ChIP_Atlas .... \n")
-    # showNotification("Searching ChIP_Atlas .... ",duration = 3,type = "message")
+    if (isTRUE(app)){
+      showNotification("Searching ChIP_Atlas .... ",duration = 2)
+    }
     ChIP_Atlas <- get_data("ChIP_Atlas","TF",tf)
     targets[["ChIP_Atlas"]] <- ChIP_Atlas %>% na.omit()
   }
@@ -126,7 +161,9 @@ predict_target <- function(datasets=c("hTFtarget",
   ####cor_TCGA##数据
   if ("TCGA" %in% cor_DB){
     cat("Fetching correlation results of TCGA .... \n")
-    # showNotification("Fetching correlation results of TCGA .... ",duration = 3,type = "message")
+    if (isTRUE(app)){
+      showNotification("Fetching correlation results of TCGA .... ",duration = 2)
+    }
     cor_res <- get_data(paste0("cor_",TCGA_tissue),"TF",tf)
     if (length(cor_res) > 0){
       cor_res <- cor_res %>% na.omit() %>%
@@ -141,7 +178,9 @@ predict_target <- function(datasets=c("hTFtarget",
   ####cor_GTEx##数据
   if ("GTEx" %in% cor_DB){
     cat("Fetching correlation results of GTEx .... \n")
-    # showNotification("Fetching correlation results of GTEx .... ",duration = 3,type = "message")
+    if (isTRUE(app)){
+      showNotification("Fetching correlation results of GTEx .... ",duration = 2)
+    }
     cor_res <- get_data(paste0("cor_",GTEx_tissue),"TF",tf)
     if (length(cor_res) > 0){
       cor_res <- cor_res %>% na.omit() %>%
@@ -158,7 +197,6 @@ predict_target <- function(datasets=c("hTFtarget",
   results <- list()
   for (i in names(targets)) {
     if (length(targets[[i]])>0){
-      print(targets[[i]] %>% as.data.frame() %>% .[,"Target"])
       results[[i]] <- targets[[i]] %>% as.data.frame() %>% .[,"Target"] %>% unique()
     }
   }
