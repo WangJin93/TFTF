@@ -98,7 +98,7 @@ ui.modules_net <- function(id) {
       ),
       # Show a plot of the generated distribution
       mainPanel(
-        tabsetPanel(	id = ns("tablist"),
+        bs4Dash::tabsetPanel(	id = ns("tablist"),
           tabPanel('TF results',
                    br(),
                    shinyjs::useShinyjs(),  # Set up shinyjs
@@ -134,10 +134,8 @@ ui.modules_net <- function(id) {
                             ),
                    column(8,
 
-                          shinycssloaders::withSpinner(plotOutput(ns("network"), height = "600px", width = "600px")),
-                          shinyjs::hidden(
-                            shinyWidgets::downloadBttn(ns("download"), "Download Figure")
-                          ),
+                          shinycssloaders::withSpinner(plotOutput(ns("network"), height = "auto", width = "600px")),
+                            shinyWidgets::downloadBttn(ns("download"), "Download Figure"),
                           tags$head(tags$style(".mybutton{background-color:aliceblue;} .mybutton2{background-color:antiquewhite;} .skin-black .sidebar .mybutton{color: green;}") )
 
                    )#column
@@ -148,9 +146,7 @@ ui.modules_net <- function(id) {
 
                    shinycssloaders::withSpinner(DTOutput(outputId = ns("plot.data"))),
                    hr(),
-                   shinyjs::hidden(
-                     shinyWidgets::downloadBttn(ns("download.data"), "Download individual data")
-                   ),
+                     shinyWidgets::downloadBttn(ns("download.data"), "Download individual data"),
                    tags$head(tags$style(".mybutton{background-color:aliceblue;} .mybutton2{background-color:antiquewhite;} .skin-black .sidebar .mybutton{color: green;}") )
 
           )
@@ -277,11 +273,6 @@ server.modules_net <- function(input, output, session) {
         }
   })
 
-  observeEvent(input$search_bttn, {
-    shinyjs::show(id = "download")
-    shinyjs::show(id = "download.data")
-
-  })
   gene_tf <- eventReactive({input$tables
     input$datafile
     input$p_cutoff
@@ -336,7 +327,7 @@ server.modules_net <- function(input, output, session) {
     return(all_results)
   })
 
-  output$network <- renderPlot({
+  output$network <- renderPlot(height = 600,{
 
     all_results <- na.omit(plot_data())
     colnames(all_results) <- c("from", "to")

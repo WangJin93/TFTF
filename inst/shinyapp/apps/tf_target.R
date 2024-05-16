@@ -77,17 +77,15 @@ ui.modules_tf <- function(id) {
       ),
       # Show a plot of the generated distribution
       mainPanel(
-        tabsetPanel(
+        bs4Dash::tabsetPanel(
           tabPanel('All results',
                    br(),
                    shinyjs::useShinyjs(),  # Set up shinyjs
                    shinycssloaders::withSpinner(DTOutput(outputId = ns("results"))),
-                   shinyjs::hidden(
                      shinyWidgets::downloadBttn(ns("download.csv"), "Download csv table")
-                   )),
+                   ),
           tabPanel('Venn diagram',
                    br(),
-                   shinyjs::useShinyjs(),  # Set up shinyjs
                    fluidRow(
                      column(4,
                           sliderInput(ns('linewidth'), 'Select line width', min = 0, max = 5, value = 1, step = 0.1),
@@ -113,10 +111,9 @@ ui.modules_tf <- function(id) {
                      ),
                    column(8,align="center",
 
-                          shinycssloaders::withSpinner(plotOutput(ns("venn_diagram"), height = "600px", width = "600px")),
-                          shinyjs::hidden(
+                          shinycssloaders::withSpinner(plotOutput(ns("venn_diagram"), height = "auto", width = "600px")),
                             shinyWidgets::downloadBttn(ns("download"), "Download Figure")
-                          )
+
 
                    )#column
                    )
@@ -134,9 +131,7 @@ ui.modules_tf <- function(id) {
 
                    shinycssloaders::withSpinner(DTOutput(outputId = ns("individual_data"))),
                    hr(),
-                   shinyjs::hidden(
-                     shinyWidgets::downloadBttn(ns("download.individual"), "Download individual data")
-                   ),
+                     shinyWidgets::downloadBttn(ns("download.individual"), "Download individual data"),
                    tags$head(tags$style(".mybutton{background-color:aliceblue;} .mybutton2{background-color:antiquewhite;} .skin-black .sidebar .mybutton{color: green;}") )
 
           )
@@ -272,12 +267,6 @@ server.modules_tf <- function(input, output, session) {
 
     return(TF_results)
   })
-  observeEvent(input$search_bttn, {
-    shinyjs::show(id = "download")
-    shinyjs::show(id = "download.csv")
-    shinyjs::show(id = "download.individual")
-
-  })
 
   observe({
     updateSelectInput(session, "individual",
@@ -294,7 +283,7 @@ server.modules_tf <- function(input, output, session) {
 
   output$results <- renderDT({
     tf_results <- TF_results()
-    tf_results <- intersections(tf_results,datasets_index = which(names(tf_results) %in% input$tables_venn))
+    tf_results <- intersections(tf_results,datasets_index = which(names(tf_results$results) %in% input$tables_venn))
     for (i in names(tf_results)) {
       length(tf_results[[i]]) <- lapply(tf_results, length) %>% unlist() %>% max()
     }
@@ -307,15 +296,20 @@ server.modules_tf <- function(input, output, session) {
 
   })
 
-  output$venn_diagram <- renderPlot({
+  output$venn_diagram <- renderPlot(height = 600,{
     tf_results <- TF_results()
-    inter_data <- intersections(tf_results,datasets_index = which(names(tf_results) %in% input$tables_venn))
+    inter_data <- intersections(tf_results,datasets_index = which(names(tf_results$results) %in% input$tables_venn))
     dd <- which(names(inter_data)=="intersection")
     if (length(dd)!=0){
       inter_data <- inter_data[-which(names(inter_data)=="intersection")]
     }
     if (length(inter_data) < 6){
-      VD <- venn.diagram(inter_data, filename = NULL, fill = RColorBrewer::brewer.pal(length(inter_data), input$color_panel), cex = input$fontsize,
+       if (length(inter_data) <3){
+         value =  RColorBrewer::brewer.pal(3, input$color_panel)[1:length(inter_data)]
+       }else{
+         value =  RColorBrewer::brewer.pal(length(inter_data), input$color_panel)
+       }
+      VD <- venn.diagram(inter_data, filename = NULL, fill = value, cex = input$fontsize,
                          margin = 0.2, cat.cex = input$fontsize, lwd = input$linewidth,
                          lty = rep(as.numeric(input$linetype), length(inter_data)))
       grid.draw(VD)
@@ -341,7 +335,7 @@ server.modules_tf <- function(input, output, session) {
       pdf(file)
 
        tf_results <- TF_results()
-       inter_data <- intersections(tf_results,datasets_index = which(names(tf_results) %in% input$tables_venn))
+       inter_data <- intersections(tf_results,datasets_index = which(names(tf_results$results) %in% input$tables_venn))
        dd <- which(names(inter_data)=="intersection")
        if (length(dd)!=0){
          inter_data <- inter_data[-which(names(inter_data)=="intersection")]
@@ -371,7 +365,7 @@ server.modules_tf <- function(input, output, session) {
     },
     content = function(file) {
       tf_results <- TF_results()
-      tf_results <- intersections(tf_results,datasets_index = which(names(tf_results) %in% input$tables_venn))
+      tf_results <- intersections(tf_results,datasets_index = which(names(tf_results$results) %in% input$tables_venn))
       for (i in names(tf_results)) {
         length(tf_results[[i]]) <- lapply(tf_results, length) %>% unlist() %>% max()
       }

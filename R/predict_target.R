@@ -48,14 +48,15 @@ predict_target <- function(datasets=c("hTFtarget",
     if (isTRUE(app)){
       showNotification("Searching hTFtarget .... ",duration = 2)
     }
-    url<-paste0("https://guolab.wchscu.cn/hTFtarget/api/chipseq/targets/tf?page=1&size=20000&tf=",tf)
-    hTFtarget <- jsonlite::fromJSON(url)
-    if(is.null(hTFtarget[["targets"]][["ensemblgene"]] )){
-      hTFtarget <-  character()
-    }else{
-      # hTFtarget <-  hTFtarget[["targets"]][["ensemblgene"]] %>%
-      #   dplyr::rename("Target" = "name")
-    }
+    # url<-paste0("https://guolab.wchscu.cn/hTFtarget/api/chipseq/targets/tf?page=1&size=20000&tf=",tf)
+    # hTFtarget <- jsonlite::fromJSON(url)
+    # if(is.null(hTFtarget[["targets"]][["ensemblgene"]] )){
+    #   hTFtarget <-  character()
+    # }else{
+    #   hTFtarget <-  hTFtarget[["targets"]][["ensemblgene"]] %>%
+    #     dplyr::rename("Target" = "name")
+    # }
+    hTFtarget <- get_data("hTFtarget","TF",tf)
 
     targets[["hTFtarget"]] <- hTFtarget %>% na.omit()
   }

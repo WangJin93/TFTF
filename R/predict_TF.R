@@ -48,17 +48,19 @@ predict_TF <- function(datasets=c("hTFtarget",
     if (isTRUE(app)){
       showNotification("Searching hTFtarget .... ",duration = 2)
       }
-    ensenbl <- idmap[idmap$gene == target ,]$ID
-    url<-paste0("https://guolab.wchscu.cn/hTFtarget/api/chipseq/targets/target?target=",ensenbl)
-    hTFtarget <- jsonlite::fromJSON(url)
-    if (is.null(hTFtarget)){
-      hTFtarget <- data.frame()
-    }else{
-      hTFtarget <-  hTFtarget[["regulations"]] %>%
-        dplyr::rename("TF" = "tf_id")
-      hTFtarget[["regulations"]][["regulation_info"]] <- hTFtarget[["regulations"]][["regulation_info"]][["regulation"]]
-    }
-    TF_result[["hTFtarget"]] <- hTFtarget[-2] %>% na.omit()
+    # ensenbl <- idmap[idmap$gene == target ,]$ID
+    # url<-paste0("https://guolab.wchscu.cn/hTFtarget/api/chipseq/targets/target?target=",ensenbl)
+    # hTFtarget <- jsonlite::fromJSON(url)
+    # if (is.null(hTFtarget)){
+    #   hTFtarget <- data.frame()
+    # }else{
+    #   hTFtarget <-  hTFtarget[["regulations"]] %>%
+    #     dplyr::rename("TF" = "tf_id")
+    #   hTFtarget[["regulations"]][["regulation_info"]] <- hTFtarget[["regulations"]][["regulation_info"]][["regulation"]]
+    # }
+    hTFtarget <- get_data("hTFtarget","Target",target)
+
+    TF_result[["hTFtarget"]] <- hTFtarget %>% na.omit()
   }
   ####KnockTF##数据
   if ("KnockTF" %in% datasets){

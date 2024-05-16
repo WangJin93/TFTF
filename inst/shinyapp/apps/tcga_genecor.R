@@ -138,12 +138,10 @@ ui.modules_tcga <- function(id) {
         p("3. Click the following data to view single cancer type "),
         tags$br(),
         DT::DTOutput(outputId = ns("tbl")),
-        shinyjs::hidden(
           wellPanel(
             id = ns("save_csv"),
             shinyWidgets::downloadBttn(ns("downloadTable"), "Save as csv")
           )
-        )
       )
     )
   )
@@ -271,13 +269,6 @@ server.modules_tcga <- function(input, output, session) {
     }
   )
     # return data
-    observeEvent(input$search_bttn, {
-      if (nchar(input$Pancan_search1) >= 1 & nchar(input$Pancan_search2) >= 1) {
-        shinyjs::show(id = "save_csv")
-      } else {
-        shinyjs::hide(id = "save_csv")
-      }
-    })
 
 
     output$tbl <- DT::renderDataTable(
