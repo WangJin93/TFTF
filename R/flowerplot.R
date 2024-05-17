@@ -1,7 +1,7 @@
 #' @title Plotting folower plot
 #' @description
 #' Plotting the folower plot for visualizing the intersection of more than 5 datasets.
-#' @import RColorBrewer
+#' @import RColorBrewer plotrix
 #' @param flower_dat List of data.
 #' @param ellipse_col_pal Color palette in RColorBrewer, default "Set1".
 #' @param label_text_cex Font size, default 1.

@@ -282,7 +282,6 @@ server.modules_net <- function(input, output, session) {
       return(NULL)
     }else{
       tf_DEG <- volcano_data() %>% dplyr::filter(Symbol %in% tf_list$TF)
-      Find_TF(tf_DEG$Symbol)
       intersect( Reduce(intersect,lapply(datasets,function(x)  get(x))),tf_DEG$Symbol)
     }
 
@@ -324,6 +323,7 @@ server.modules_net <- function(input, output, session) {
                                      cor_cutoff = input$cor.threshold,
                                      app = T)
     }
+    all_results <- all_results %>% dplyr::filter(Target %in% volcano_data()$Symbol)
     return(all_results)
   })
 
@@ -361,14 +361,14 @@ server.modules_net <- function(input, output, session) {
       p <- ggraph(graph_gt, layout = input$layout) +
         geom_edge_fan(color="grey",show.legend=FALSE) +
         geom_node_point(aes(size = abs(logFC),fill = logFC),colour="black",shape=21)+
-        geom_node_text(aes(label=name),size=input$text_size,repel=TRUE)+
+        geom_node_text(aes(label=name),size=input$text_size,repel=TRUE,max.overlaps=10)+
         theme_graph() +guides(size="none")+
         scale_fill_distiller(palette = "Spectral")+
         theme(text = element_text(family = "Times"))
 
 
 
-      pdf(file, width = 7 ,height = 6)
+      pdf(file, width = 8 ,height = 8)
       print(p)
       dev.off()
     })

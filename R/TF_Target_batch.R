@@ -43,8 +43,11 @@ TF_Target_batch <- function(datasets=c("FIMO_JASPAR"),
                                           down.only = down.only,
                                           tf = x,
                                           app = app)
-                           data.frame(tf = x,
-                                           Target =   intersections(dd)[["intersection"]])
+                           targets <- intersections(dd)[["intersection"]]
+                           if (length(targets) > 0){
+                             data.frame(tf = x,
+                                        Target =  targets)
+                           }
                          }
                          )
   )
