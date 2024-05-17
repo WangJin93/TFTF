@@ -1,3 +1,4 @@
+<https://www.jingege.wang/tf-target-finder-an-r-web-application-and-package-bridging-multiple-predictive-models-for-decoding-transcription-fac-tor-target-interactions/>
 Transcription Factor Target Finder (TFTF) is an R package designed for predicting transcription factor target genes and predicting upstream transcription factors of target genes. There are currently many online tools for predicting transcription factor target genes, such as hTFTarget, KnockTF, CHEA, TRRUST, GTRD, and ChIP Atlas, which are based on Chip-seq high-throughput data, transcriptional profiling data from knockdown/knockout experiments, or motif sequences. Our aim is to fully utilize the prediction results from these online tools and combine them with correlation analysis to maximize the reliability of the predicted transcription factor-target gene regulatory relationships.
 
 # 1、 Related online tools and database information
