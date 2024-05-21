@@ -112,7 +112,7 @@ ui.modules_tcga <- function(id) {
           ),
 
           textInput(ns('venncolors'), "Comma seperated list of colors", value = 'green,black,red'),
-          a(href = "http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf", "R-colors"),
+          a(href = "http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf",target = "_blank", "R-colors"),
           tags$hr(style = "border:none; border-top:2px solid #5E81AC;"),
         ),
         br(),
@@ -134,7 +134,7 @@ ui.modules_tcga <- function(id) {
         hr(),
         h5("NOTEs:"),
         p("1. The data query may take some time based on your network. Wait until a plot shows"),
-        p("2. ", tags$a(href = "https://pancanatlas.xenahubs.net/", "Genomic profile data source")),
+        p("2. ", tags$a(href = "https://pancanatlas.xenahubs.net/",target = "_blank", "Genomic profile data source")),
         p("3. Click the following data to view single cancer type "),
         tags$br(),
         DT::DTOutput(outputId = ns("tbl")),
