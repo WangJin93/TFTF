@@ -16,7 +16,7 @@ ui.modules_tf <- function(id) {
                      choices = NULL,
                      width = "100%",
                      options = list(
-                       create = TRUE)
+                       create = F)
                    ),
 
 
