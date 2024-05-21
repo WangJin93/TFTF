@@ -14,21 +14,21 @@ ui.modules_tcga <- function(id) {
         wellPanel(
           selectizeInput(
             inputId = ns("Pancan_search1"),
-            label = "Input a TF",
+            label = "Input a TF name",
             choices = NULL,
             width = "100%",
             options = list(
-              create = TRUE
+              create = F
             )
           ),
 
           selectizeInput(
             inputId = ns("Pancan_search2"),
-            label = "Input a gene or formula (as signature)",
+            label = "Input a gene symbol",
             choices = NULL,
             width = "100%",
             options = list(
-              create = TRUE,
+              create = F,
               maxOptions = 5,
               placeholder = "Enter a gene symbol, e.g. TP53",
               plugins = list("restore_on_backspace")
