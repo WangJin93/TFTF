@@ -53,20 +53,20 @@ devtools::install_github("WangJin93/TFTF")
 ## 4.2 Introduction to Data and Basic Functions
 
 View the list of transcription factors included in this R package and their coverage across all datasets. We only include transcription factors that are present in at least 2 datasets out of nine, resulting in a total of 1575 transcription factors.
-
-\>tf_list
-
+```R
+tf_list
+```
 ![](media/fcf2a5bc0a46565454314567fd8df2eb.png)
 
 \# View correlation analysis organization types
-
-\>tissue
-
+```R
+tissue
+```
 ![](media/7ed6b0a0a6e55e2bf3db9920b4368cfd.png)
 
 destination description Predict the target genes of Transcription Factor in multiple TF-target prediction databases and correlation analysis.
-
-\>predict_target(
+```R
+predict_target(
 
 datasets = c("hTFtarget", "KnockTF", "FIMO_JASPAR", "PWMEnrich_JASPAR", "ENCODE",
 
@@ -93,10 +93,10 @@ down.only = T,
 app = F
 
 )
-
+```
 Predict the upstream Transcription Factors regulating user inputted gene in multiple TF-target prediction databases and correlation analysis.
-
-\>predict_TF(
+```R
+predict_TF(
 
 datasets = c("hTFtarget", "KnockTF", "FIMO_JASPAR", "PWMEnrich_JASPAR", "ENCODE",
 
@@ -123,10 +123,10 @@ down.only = T,
 app = F
 
 )
-
+```
 Intersection analysis and visualization of prediction results
-
-\>Results \<-predict_target(datasets=c("hTFtarget","KnockTF","FIMO_JASPAR",
+```R
+Results \<-predict_target(datasets=c("hTFtarget","KnockTF","FIMO_JASPAR",
 
 "PWMEnrich_JASPAR"),
 
@@ -137,12 +137,12 @@ tf = "STAT3")
 results_inter \<- intersections(results)
 
 plot_venn(results_inter)
-
+```
 ![](media/d97664e9940b9b3aa1c4731759ee4ef6.png)
 
 Correlation analysis between TF and target gene in pan-tissue in "TCGA", "GTEx" or "CCLE" databases.
-
-\>cor_results \<- pantissue_cor_analysis(
+```R
+cor_results \<- pantissue_cor_analysis(
 
 Gene1 = "FOXM1",
 
@@ -155,23 +155,23 @@ type = c("normal", "tumor"),
 cor_method = "pearson"
 
 )
-
+```
 ![](media/36bc69d82da9367b193885e81412ebb9.png)
 
 Visualization of pan-tissue correlation analysis using ggplot2.
-
-\> viz_cor_results(cor_results,
+```R
+viz_cor_results(cor_results,
 
 values = c("black","red"))
-
+```
 ![](media/5902c540ba685d3566bbd7218894b8ac.png)
 
 # 5、 Introduction to the operation of Shiny APP visualization interface
 
 The R package has a built-in app that can implement all the functions of the R package, visualize the operation interface, and require the necessary packages to be installed in order to run (shiny, DT, graph, ggraph, shinyWidgets, bs4Dash, tidygraph).
-
-\>TFTF_app()
-
+```R
+TFTF_app()
+```
 \#In addition, you can also access the app through the following link: <https://jingle.shinyapps.io/TF_Target_Finder/>。
 
 ## 5.1 Module 1: Procedures for the prediction of the target genes of TF
