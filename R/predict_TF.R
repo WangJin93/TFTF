@@ -183,7 +183,7 @@ predict_TF <- function(datasets=c("hTFtarget",
       t()%>% as.data.frame()%>%
       na.omit() %>%
       rename(.,"cor"=target ) %>%
-      dplyr::mutate(.,cor = as.numeric( cor)/100) %>%
+      dplyr::mutate(.,cor = as.numeric( cor)/1000) %>%
       dplyr::filter(.,abs(cor) >= cor_cutoff) %>%
       tibble::rownames_to_column(.,"TF")
     }
