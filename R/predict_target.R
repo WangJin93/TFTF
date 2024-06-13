@@ -170,7 +170,7 @@ predict_target <- function(datasets=c("hTFtarget",
       cor_res <- cor_res %>% na.omit() %>%
       rename(.,"cor"=tf ) %>%
       rename(.,"Target"="gene" ) %>%
-      dplyr::mutate(.,cor = as.numeric( cor)/100) %>%
+      dplyr::mutate(.,cor = as.numeric( cor)/1000) %>%
       dplyr::filter(.,abs(cor) >= cor_cutoff) %>%
       dplyr::mutate(.,TF = tf)
     }
