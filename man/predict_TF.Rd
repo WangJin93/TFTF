@@ -13,7 +13,7 @@ predict_TF(
   cor_DB = c("TCGA", "GTEx"),
   cor_cutoff = 0.3,
   FIMO.score = 10,
-  PWMEnrich.score = 10,
+  PWMEnrich.p = 0.1,
   cut.log2FC = 1,
   down.only = T,
   app = F
@@ -32,11 +32,11 @@ predict_TF(
 
 \item{cor_cutoff}{Threshold of correlation coefficient for correlation analysis.}
 
-\item{FIMO.score}{Threshold of the score of the prediction TF-target results by using FIMO algorithm.}
+\item{FIMO.score}{Threshold of the score of the prediction TF-target results by using FIMO algorithm (bigger is better), default 10.}
 
-\item{PWMEnrich.score}{Threshold of the score of the prediction TF-target results by using PWMEnrich algorithm..}
+\item{PWMEnrich.p}{Threshold of the score of the prediction TF-target results by using PWMEnrich algorithm (smaller is better), default 0.10.}
 
-\item{cut.log2FC}{Threshold of log2FC for KnockTF dataset.}
+\item{cut.log2FC}{Threshold of log2FC for KnockTF dataset, default 1.}
 
 \item{down.only}{Logic value. If true, only the downregulated genes in TF knockout/knockdown cells were returned in KnockTF dataset.}
 
@@ -47,6 +47,6 @@ Predict the upstream Transcription Factors regulating user inputted gene in mult
 }
 \examples{
 \dontrun{
-results <- predict_TF(datasets=c("hTFtarget","KnockTF","ChIP_Atlas"), cor_DB = c("TCGA","GTEx"),gene = "GAPDH")
+results <- predict_TF(datasets=c("hTFtarget","KnockTF","ChIP_Atlas"), cor_DB = c("TCGA","GTEx"),target = "GAPDH")
 }
 }

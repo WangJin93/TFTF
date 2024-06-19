@@ -8,14 +8,14 @@
 #' @param GTEx_tissue Cancer type in GTEx database, you can use tissue_type("GTEx") to abtain the tissue types.
 #' @param cor_DB The database used for the correlation analyze between TF and targets. You can use 2 databases, viz. TCGA (33 cancer types) and GTEx (31 normal tissue types).
 #' @param cor_cutoff Threshold of correlation coefficient for correlation analysis.
-#' @param FIMO.score Threshold of the score of the prediction TF-target results by using FIMO algorithm.
-#' @param PWMEnrich.score Threshold of the score of the prediction TF-target results by using PWMEnrich algorithm..
-#' @param cut.log2FC Threshold of log2FC for KnockTF dataset.
+#' @param FIMO.score Threshold of the score of the prediction TF-target results by using FIMO algorithm (bigger is better), default 10.
+#' @param PWMEnrich.p Threshold of the score of the prediction TF-target results by using PWMEnrich algorithm (smaller is better), default 0.10.
+#' @param cut.log2FC Threshold of log2FC for KnockTF dataset, default 1.
 #' @param down.only Logic value. If true, only the downregulated genes in TF knockout/knockdown cells were returned in KnockTF dataset.
 #' @param app Logic value. TRUE only used in the shiny app.
 #' @examples
 #' \dontrun{
-#' results <- predict_TF(datasets=c("hTFtarget","KnockTF","ChIP_Atlas"), cor_DB = c("TCGA","GTEx"),gene = "GAPDH")
+#' results <- predict_TF(datasets=c("hTFtarget","KnockTF","ChIP_Atlas"), cor_DB = c("TCGA","GTEx"),target = "GAPDH")
 #' }
 #' @export
 #'
@@ -34,7 +34,7 @@ predict_TF <- function(datasets=c("hTFtarget",
                        cor_DB = c("TCGA","GTEx"),
                        cor_cutoff = 0.3,
                        FIMO.score=10,
-                       PWMEnrich.score =10,
+                       PWMEnrich.p =0.1,
                        cut.log2FC = 1,
                        down.only = T,
                        app = F){
@@ -126,9 +126,11 @@ predict_TF <- function(datasets=c("hTFtarget",
     if (isTRUE(app)){
       showNotification("Searching FIMO_JASPAR .... ",duration = 2)
     }
-    target2 <- refgene[refgene$symbol == target ,]$Target %>% na.omit()
-    Jaspar <- get_data("FIMO_JASPAR","Target",target2)
+    Jaspar <- get_data("FIMO_JASPAR","Target",target)
     if (length(Jaspar) > 0){
+      Jaspar$score <- as.numeric(Jaspar$score)
+      Jaspar$p.value <- as.numeric(Jaspar$p.value)
+      Jaspar$q.value <- as.numeric(Jaspar$q.value)
       Jaspar <- Jaspar[Jaspar$score > FIMO.score,]
     }
     TF_result[["FIMO_JASPAR"]] <- Jaspar %>% na.omit()
@@ -136,11 +138,13 @@ predict_TF <- function(datasets=c("hTFtarget",
   ###PWMEnrich_JASPAR
   if ("PWMEnrich_JASPAR" %in% datasets){
     cat("Searching PWMEnrich_JASPAR .... \n")
-    showNotification("Searching PWMEnrich_JASPAR .... ",duration = 2)
-    target2 <- refgene[refgene$symbol == target ,]$Target %>% na.omit()
-    PWMEnrich_JASPAR <- get_data("PWMEnrich_JASPAR","Target",target2)
+    if (isTRUE(app)){
+      showNotification("Searching PWMEnrich_JASPAR .... ",duration = 2)
+    }
+    PWMEnrich_JASPAR <- get_data("PWMEnrich_JASPAR","Target",target)
     if (length(PWMEnrich_JASPAR) > 0){
-      PWMEnrich_JASPAR <- PWMEnrich_JASPAR[PWMEnrich_JASPAR$raw.score > PWMEnrich.score,]
+      PWMEnrich_JASPAR$P.value <- as.numeric(PWMEnrich_JASPAR$P.value)
+      PWMEnrich_JASPAR <- PWMEnrich_JASPAR[PWMEnrich_JASPAR$P.value < PWMEnrich.p,]
     }
     TF_result[["PWMEnrich_JASPAR"]] <- PWMEnrich_JASPAR %>% na.omit()
   }
@@ -182,7 +186,7 @@ predict_TF <- function(datasets=c("hTFtarget",
       cor_res <- cor_res %>% tibble::column_to_rownames("gene")%>%
       t()%>% as.data.frame()%>%
       na.omit() %>%
-      rename(.,"cor"=target ) %>%
+      rename(.,"cor"=all_of(target) ) %>%
       dplyr::mutate(.,cor = as.numeric( cor)/1000) %>%
       dplyr::filter(.,abs(cor) >= cor_cutoff) %>%
       tibble::rownames_to_column(.,"TF")
@@ -201,8 +205,8 @@ predict_TF <- function(datasets=c("hTFtarget",
       cor_res <-  cor_res %>% tibble::column_to_rownames("gene")%>%
       t()%>% as.data.frame()%>%
       na.omit() %>%
-      rename(.,"cor"=target ) %>%
-      dplyr::mutate(.,cor = as.numeric( cor)/100) %>%
+      rename(.,"cor"=all_of(target) ) %>%
+      dplyr::mutate(.,cor = as.numeric( cor)/1000) %>%
       dplyr::filter(.,abs(cor) >= cor_cutoff) %>%
       tibble::rownames_to_column(.,"TF")
     }

@@ -1,4 +1,4 @@
-
+library(TFTF)
 if(!require("shiny")) install.packages("shiny",update = F,ask = F)
 if(!require("waiter")) install.packages("waiter",update = F,ask = F)
 if(!require("ggplot2")) install.packages("ggplot2",update = F,ask = F)
@@ -17,6 +17,7 @@ if(!require("ggraph")) install.packages("ggraph",update = F,ask = F)
 if(!require("tidygraph")) install.packages("tidygraph",update = F,ask = F)
 if(!require("bs4Dash")) install.packages("bs4Dash",update = F,ask = F)
 if(!require("plotrix")) install.packages("plotrix",update = F,ask = F)
+
 source("apps/Dashboard.R")
 source("apps/tf_target.R")
 source("apps/tf_target_net.R")

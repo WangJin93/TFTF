@@ -1,0 +1,24 @@
+INFO [2024-06-06 08:55:42] [[1]]
+INFO [2024-06-06 08:55:42] inter_data
+INFO [2024-06-06 08:55:42] 
+INFO [2024-06-06 08:55:42] $filename
+INFO [2024-06-06 08:55:42] NULL
+INFO [2024-06-06 08:55:42] 
+INFO [2024-06-06 08:55:42] $fill
+INFO [2024-06-06 08:55:42] RColorBrewer::brewer.pal(length(inter_data), input$color_panel)
+INFO [2024-06-06 08:55:42] 
+INFO [2024-06-06 08:55:42] $cex
+INFO [2024-06-06 08:55:42] input$fontsize
+INFO [2024-06-06 08:55:42] 
+INFO [2024-06-06 08:55:42] $margin
+INFO [2024-06-06 08:55:42] [1] 0.2
+INFO [2024-06-06 08:55:42] 
+INFO [2024-06-06 08:55:42] $cat.cex
+INFO [2024-06-06 08:55:42] input$fontsize
+INFO [2024-06-06 08:55:42] 
+INFO [2024-06-06 08:55:42] $lwd
+INFO [2024-06-06 08:55:42] input$linewidth
+INFO [2024-06-06 08:55:42] 
+INFO [2024-06-06 08:55:42] $lty
+INFO [2024-06-06 08:55:42] rep(as.numeric(input$linetype), length(inter_data))
+INFO [2024-06-06 08:55:42] 
