@@ -37,3 +37,8 @@ NULL
 #' @docType data
 #' data("data_info.rda")
 NULL
+
+#'
+#' @docType data
+#' data("abrr_full.rda")
+NULL

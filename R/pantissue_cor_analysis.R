@@ -135,7 +135,9 @@ pantissue_cor_analysis <- function(Gene1 = "FOXM1",
     output<-rbind(output,output1)
   }
   output$logP<-log10(output$p)*(-1)
-
+  if (data_source == "TCGA"){
+    output <- merge(abrr_full,output,by = "tissue")
+  }
 
   return(list(cor_data = df,
               cor_result = output))

@@ -136,7 +136,7 @@ predict_target <- function(datasets=c("hTFtarget",
           dplyr::filter(.,abs(as.numeric( Log2FC))> cut.log2FC )%>%
           dplyr::filter(.,P_value < 0.05 )
       }
-      KnockTF <- merge(KnockTF,knocktf_data,by = "Sample_ID")
+      KnockTF <- merge(KnockTF,knocktf_data,by = "Sample_ID")[c(1,3,7,4:6,10:13)]
       }
     targets[["KnockTF"]] <- KnockTF %>% na.omit()
   }
