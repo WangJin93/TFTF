@@ -1,7 +1,7 @@
 #' @title Predict TFs targeting gene
 #' @description
 #'  Predict the upstream Transcription Factors regulating user inputted gene in multiple TF-target prediction databases and correlation analysis.
-#' @import RMySQL dplyr jsonlite tibble
+#' @import dplyr jsonlite tibble
 #' @param datasets Including the TF-target regulatory data of 7 public TF online tools and the TF-targets prediction results analyzed by using FIMO and PWMEnrich.
 #' @param target Input a gene symbol, e.g. GAPDH.
 #' @param TCGA_tissue Cancer type in TCGA database, you can use tissue_type("TCGA") to abtain the tissue types.

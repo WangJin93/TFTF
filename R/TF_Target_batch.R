@@ -1,7 +1,7 @@
 #' @title Predict the target genes of TFs
 #' @description
 #'  Predict the target genes of Transcription Factors in multiple TF-target prediction databases and correlation analysis.
-#' @import RMySQL dplyr jsonlite tibble
+#' @import dplyr jsonlite tibble
 #' @param datasets Including the TF-target regulatory data of 7 public TF online tools and the TF-targets prediction results analyzed by using FIMO and PWMEnrich.
 #' @param tfs Transcription factor names
 #' @param TCGA_tissue Cancer type in TCGA database, you can use tissue_type("TCGA") to abtain the tissue types.
