@@ -9,7 +9,7 @@
 #' @param cor_DB The database used for the correlation analyze between TF and targets. You can use 2 databases, viz. TCGA (33 cancer types) and GTEx (31 normal tissue types).
 #' @param cor_cutoff Threshold of correlation coefficient for correlation analysis.
 #' @param FIMO.score Threshold of the score of the prediction TF-target results by using FIMO algorithm.
-#' @param PWMEnrich.score Threshold of the score of the prediction TF-target results by using PWMEnrich algorithm..
+#' @param PWMEnrich.p Threshold of the score of the prediction TF-target results by using PWMEnrich algorithm..
 #' @param cut.log2FC Threshold of log2FC for KnockTF dataset.
 #' @param down.only Logic value. If true, only the downregulated genes in TF knockout/knockdown cells were returned in KnockTF dataset.
 #' @param app Logic value. TRUE only used in the shiny app.
@@ -26,7 +26,7 @@ TF_Target_batch <- function(datasets=c("FIMO_JASPAR"),
                             cor_DB = c("TCGA","GTEx"),
                             cor_cutoff = 0.3,
                             FIMO.score=10,
-                            PWMEnrich.score =10,
+                            PWMEnrich.p =10,
                             cut.log2FC = 1,
                             down.only = T,
                             app = F){
@@ -38,7 +38,7 @@ TF_Target_batch <- function(datasets=c("FIMO_JASPAR"),
                                           GTEx_tissue = GTEx_tissue,
                                           cor_cutoff = cor_cutoff,
                                           FIMO.score=FIMO.score,
-                                          PWMEnrich.score =PWMEnrich.score,
+                                          PWMEnrich.p =PWMEnrich.p,
                                           cut.log2FC = cut.log2FC,
                                           down.only = down.only,
                                           tf = x,
