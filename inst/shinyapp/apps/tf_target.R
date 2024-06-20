@@ -46,7 +46,7 @@ ui.modules_tf <- function(id) {
                    hr(),
                    selectizeInput(
                      inputId = ns("correlation"),
-                     label = "Correlaiton:",
+                     label = "Correlaiton (Only for protein coding gene):",
                      choices = c("Corr_TCGA"= "TCGA",
                                  "Corr_GTEx" = "GTEx"),
                      multiple = T,
@@ -130,6 +130,7 @@ ui.modules_tf <- function(id) {
                    ),
 
                    shinycssloaders::withSpinner(DTOutput(outputId = ns("individual_data"))),
+                   p("Note: The information in the table, aside from TF and Target, represents specific details obtained from the corresponding prediction tools."),
                    hr(),
                      shinyWidgets::downloadBttn(ns("download.individual"), "Download individual data"),
                    tags$head(tags$style(".mybutton{background-color:aliceblue;} .mybutton2{background-color:antiquewhite;} .skin-black .sidebar .mybutton{color: green;}") )

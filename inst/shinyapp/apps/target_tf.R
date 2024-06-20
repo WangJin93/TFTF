@@ -1,4 +1,6 @@
 gene_list <- readRDS("rdata/pancan_gene_list.RDS")
+target_list <- readRDS("rdata/target_list.RDS")
+
 ui.modules_target <- function(id) {
   ns <- NS(id)
   fluidPage(
@@ -48,7 +50,7 @@ ui.modules_target <- function(id) {
                    hr(),
                    selectizeInput(
                      inputId = ns("correlation"),
-                     label = "Correlaiton:",
+                     label = "Correlaiton (Only for protein coding gene):",
                      choices = c("Corr_TCGA"= "TCGA",
                                  "Corr_GTEx" = "GTEx"),
                      multiple = T,
@@ -150,6 +152,7 @@ ui.modules_target <- function(id) {
 
                    HTML("<hr>"),
                    shinycssloaders::withSpinner(DTOutput(outputId = ns("individual_data"))),
+                   p("Note: The information in the table, aside from TF and Target, represents specific details obtained from the corresponding prediction tools."),
                    hr(),
                      shinyWidgets::downloadBttn(ns("download.individual"), "Download individual data"),
                    tags$head(tags$style(".mybutton{background-color:aliceblue;} .mybutton2{background-color:antiquewhite;} .skin-black .sidebar .mybutton{color: green;}") )
@@ -251,6 +254,15 @@ server.modules_target <- function(input, output, session) {
           })
 
         }
+  })
+  observeEvent(input$Gene,{
+    if (input$Gene!=""){
+      dd <- lapply(names(target_list), function(x){input$Gene %in% target_list[[x]]})%>% unlist
+      updateSelectInput(session, "tables",
+                        choices = names(target_list)[dd],
+                        selected = names(target_list)[dd]
+      )
+    }
   })
 
   TF_results <- eventReactive(input$search_bttn,{
