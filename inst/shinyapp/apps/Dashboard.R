@@ -3,7 +3,7 @@ ui.modules_dash <- function(id) {
   tagList(
     bs4Jumbotron(
       title = "Welcome to the Shiny TF-Target Finder (TFTF)!",
-      lead = "This is a Shiny application that bridging multiple predictive models for decoding transcription factor-target interactions in human. Our application synergizes the predictive capacities of multiple web tools by intersecting their results to enhance reliability!",
+      lead = "Transcription factors (TFs) are crucial in modulating gene expression and sculpting cellular and organismal phenotypes. The identification of TF-target gene interactions is pivotal for compre-hending molecular pathways and disease etiologies but has been hindered by the demanding nature of traditional experimental approaches. This paper introduces a novel web application and package, utilizing the R program, which predicts TF-target gene relationships and vice versa. Our application integrates the predictive power of various bioinformatic tools, leveraging their combined strengths to provide robust predictions. It merges databases for enhanced precision, incorporates gene expression correlation for accuracy, and employs pan-tissue correlation anal-ysis for context-specific insights. The application also enables the integration of user data with established resources to analyze TF-target gene networks. Despite its current limitation to hu-man data, it provides a platform for exploring gene regulatory mechanisms comprehensively. This integrated, systematic approach offers researchers an invaluable tool for dissecting the complexities of gene regulation, with the potential for future expansions to include a broader range of species.",
       status = "info",
       btnName = "Detailed introduction",
       href = "https://github.com/WangJin93/TFTF"
@@ -38,7 +38,7 @@ ui.modules_dash <- function(id) {
       ),
       column(6,
              box(title = h4("Citation"), solidHeader = T, status = "info", width = 12, collapsible = T,
-                 h5("Undering review")),
+                 h5("Wang J. TFTF: An R-Based Integrative Tool for Decoding Human Transcription Factor–Target Interactions. Biomolecules. 2024; 14(7):749. https://doi.org/10.3390/biom14070749")),
              box(title = h4("Package source code"), solidHeader = T, status = "info", width = 12, collapsible = T,
                  h5("https://github.com/WangJin93/TFTF"))
                  # h4("TF list obtained by taking the union of multiple tools"),
