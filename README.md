@@ -232,8 +232,8 @@ https://github.com/WangJin93/TFTF
 
 # 7、 Citation
 
-Under review
-
+Wang J. TFTF: An R-Based Integrative Tool for Decoding Human Transcription Factor–Target Interactions. Biomolecules. 2024; 14(7):749. https://doi.org/10.3390/biom14070749   
+        
 # 8、 Feedback and suggestions
 
 Email: [jin.wang93@outlook.com](mailto:jin.wang93@outlook.com)
