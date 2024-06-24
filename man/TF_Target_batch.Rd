@@ -12,7 +12,7 @@ TF_Target_batch(
   cor_DB = c("TCGA", "GTEx"),
   cor_cutoff = 0.3,
   FIMO.score = 10,
-  PWMEnrich.score = 10,
+  PWMEnrich.p = 10,
   cut.log2FC = 1,
   down.only = T,
   app = F
@@ -33,7 +33,7 @@ TF_Target_batch(
 
 \item{FIMO.score}{Threshold of the score of the prediction TF-target results by using FIMO algorithm.}
 
-\item{PWMEnrich.score}{Threshold of the score of the prediction TF-target results by using PWMEnrich algorithm..}
+\item{PWMEnrich.p}{Threshold of the score of the prediction TF-target results by using PWMEnrich algorithm..}
 
 \item{cut.log2FC}{Threshold of log2FC for KnockTF dataset.}
 
