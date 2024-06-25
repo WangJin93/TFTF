@@ -126,7 +126,7 @@ app = F
 ```
 Intersection analysis and visualization of prediction results
 ```R
-Results \<-predict_target(datasets=c("hTFtarget","KnockTF","FIMO_JASPAR",
+Results <-predict_target(datasets=c("hTFtarget","KnockTF","FIMO_JASPAR",
 
 "PWMEnrich_JASPAR"),
 
@@ -134,7 +134,7 @@ cor_DB = c("TCGA","GTEx"),
 
 tf = "STAT3")
 
-results_inter \<- intersections(results)
+results_inter <- intersections(results)
 
 plot_venn(results_inter)
 ```
@@ -142,7 +142,7 @@ plot_venn(results_inter)
 
 Correlation analysis between TF and target gene in pan-tissue in "TCGA", "GTEx" or "CCLE" databases.
 ```R
-cor_results \<- pantissue_cor_analysis(
+cor_results <- pantissue_cor_analysis(
 
 Gene1 = "FOXM1",
 
