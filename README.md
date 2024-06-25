@@ -75,7 +75,7 @@ predict_target(
         cor_DB = c("TCGA", "GTEx"),
         cor_cutoff = 0.3,
         FIMO.score = 10,
-        PWMEnrich.score = 10,
+        PWMEnrich.p = 0.1,
         cut.log2FC = 1,
         down.only = T,
         app = F
@@ -92,7 +92,7 @@ predict_TF(
         cor_DB = c("TCGA", "GTEx"),
         cor_cutoff = 0.3,
         FIMO.score = 10,
-        PWMEnrich.score = 10,
+        PWMEnrich.p = 0.1,
         cut.log2FC = 1,
         down.only = T,
         app = F
