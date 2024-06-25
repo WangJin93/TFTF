@@ -67,104 +67,66 @@ tissue
 destination description Predict the target genes of Transcription Factor in multiple TF-target prediction databases and correlation analysis.
 ```R
 predict_target(
-
-datasets = c("hTFtarget", "KnockTF", "FIMO_JASPAR", "PWMEnrich_JASPAR", "ENCODE",
-
-"CHEA", "TRRUST", "GTRD", "ChIP_Atlas"),
-
-tf = "STAT3",
-
-TCGA_tissue = "COAD",
-
-GTEx_tissue = "Colon",
-
-cor_DB = c("TCGA", "GTEx"),
-
-cor_cutoff = 0.3,
-
-FIMO.score = 10,
-
-PWMEnrich.score = 10,
-
-cut.log2FC = 1,
-
-down.only = T,
-
-app = F
-
+        datasets = c("hTFtarget", "KnockTF", "FIMO_JASPAR", "PWMEnrich_JASPAR", "ENCODE",
+        "CHEA", "TRRUST", "GTRD", "ChIP_Atlas"),
+        tf = "STAT3",
+        TCGA_tissue = "COAD",
+        GTEx_tissue = "Colon",
+        cor_DB = c("TCGA", "GTEx"),
+        cor_cutoff = 0.3,
+        FIMO.score = 10,
+        PWMEnrich.score = 10,
+        cut.log2FC = 1,
+        down.only = T,
+        app = F
 )
 ```
 Predict the upstream Transcription Factors regulating user inputted gene in multiple TF-target prediction databases and correlation analysis.
 ```R
 predict_TF(
-
-datasets = c("hTFtarget", "KnockTF", "FIMO_JASPAR", "PWMEnrich_JASPAR", "ENCODE",
-
-"CHEA", "TRRUST", "GTRD", "ChIP_Atlas"),
-
-target = "GAPDH",
-
-TCGA_tissue = "COAD",
-
-GTEx_tissue = "Colon",
-
-cor_DB = c("TCGA", "GTEx"),
-
-cor_cutoff = 0.3,
-
-FIMO.score = 10,
-
-PWMEnrich.score = 10,
-
-cut.log2FC = 1,
-
-down.only = T,
-
-app = F
-
+        datasets = c("hTFtarget", "KnockTF", "FIMO_JASPAR", "PWMEnrich_JASPAR", "ENCODE",
+        "CHEA", "TRRUST", "GTRD", "ChIP_Atlas"),
+        target = "GAPDH",
+        TCGA_tissue = "COAD",
+        GTEx_tissue = "Colon",
+        cor_DB = c("TCGA", "GTEx"),
+        cor_cutoff = 0.3,
+        FIMO.score = 10,
+        PWMEnrich.score = 10,
+        cut.log2FC = 1,
+        down.only = T,
+        app = F
 )
 ```
 Intersection analysis and visualization of prediction results
 ```R
 Results <-predict_target(datasets=c("hTFtarget","KnockTF","FIMO_JASPAR",
-
-"PWMEnrich_JASPAR"),
-
-cor_DB = c("TCGA","GTEx"),
-
-tf = "STAT3")
-
+        "PWMEnrich_JASPAR"),
+        cor_DB = c("TCGA","GTEx"),
+        tf = "STAT3")
 results_inter <- intersections(results)
-
 plot_venn(results_inter)
 ```
-![](media/d97664e9940b9b3aa1c4731759ee4ef6.png)
+![image](media/d97664e9940b9b3aa1c4731759ee4ef6.png)
 
 Correlation analysis between TF and target gene in pan-tissue in "TCGA", "GTEx" or "CCLE" databases.
 ```R
 cor_results <- pantissue_cor_analysis(
-
-Gene1 = "FOXM1",
-
-Gene2 = "GAPDH",
-
-data_source = "TCGA",
-
-type = c("normal", "tumor"),
-
-cor_method = "pearson"
-
+        Gene1 = "FOXM1",
+        Gene2 = "GAPDH",
+        data_source = "TCGA",
+        type = c("normal", "tumor"),
+        cor_method = "pearson"
 )
 ```
-![](media/36bc69d82da9367b193885e81412ebb9.png)
+![image](media/36bc69d82da9367b193885e81412ebb9.png)
 
 Visualization of pan-tissue correlation analysis using ggplot2.
 ```R
 viz_cor_results(cor_results,
-
 values = c("black","red"))
 ```
-![](media/5902c540ba685d3566bbd7218894b8ac.png)
+![image](media/5902c540ba685d3566bbd7218894b8ac.png)
 
 # 5、 Introduction to the operation of Shiny APP visualization interface
 
@@ -186,7 +148,7 @@ This systematic approach enables a thorough analysis of TF-target gene interacti
 -   **Visualize intersections:** The “Venn diagram” tab allowed for the visualization of overlapping predictions across multiple tools using Venn or petal diagrams.
 -   **Individual dataset review:** The “Individual dataset” tab enabled viewing and downloading detailed information for each tool’s predictive results.
 
-![](media/15b5de6403eaa4fb6f7aedca3d73394f.png)
+![image](media/15b5de6403eaa4fb6f7aedca3d73394f.png)
 
 ## 5.2 Module 2: Procedures for the prediction of upstream TFs of target genes
 
@@ -197,7 +159,7 @@ This integrated approach, combining gene expression correlation analysis with mu
 -   **Select correlation datasets (optional):** Users can further enhance the accuracy of predictions based on the correlation analysis results of TF and target gene expression in different tissues based on TCGA and GTEx database. Also, the threshold for correlation coefficient is set to 0.3.
 -   **Results:** Similar to Module 1, the predicted results were displayed on the “All results” tab. Also, user can select datasets with robust predictions for intersection analysis.
 
-![](media/a403aca9c41b87902cf0b78bf626e778.png)
+![image](media/a403aca9c41b87902cf0b78bf626e778.png)
 
 ## 5.3 Module 3: Pan-tissue correlation analysis between the expression of predicted TF-target pair
 
@@ -210,7 +172,7 @@ In this module, we utilized data from three publicly available databases to anal
 -   **Plotting parameter:** Options are provided to adjust parameters relevant to the scatter plot visualization.
 -   **Detailed scatter plot:** Clicking on a row within the results table prompts a popup window that displays a detailed scatter plot for the expression of the two genes within a single tissue type.
 
-![](media/718109413d3b6bde0a376a69fd687307.png)
+![image](media/718109413d3b6bde0a376a69fd687307.png)
 
 ## 5.4 Module 4: TF-targets regulation network analysis
 
@@ -224,7 +186,7 @@ The module was designed to predict the target genes of transcription factors (TF
 -   **Network Visualization:** Clicking the ‘Go’ button starts the predictive analysis process. After the analysis is complete, a network diagram is generated. Note that some TFs may not display target genes in the network diagram if no target genes are identified after intersecting the results from multiple tools. In such cases, it may be beneficial to reduce the number of tools included in the analysis to obtain more extensive information.
 -   **Plotting Data Interface:** The ‘Plotting data’ interface will present the predicted results for TF-target genes.
 
-![](media/e386cc0000d350a222d247549019a47d.png)
+![image](media/e386cc0000d350a222d247549019a47d.png)
 
 # 6、 Source code
 
