@@ -116,7 +116,9 @@ predict_TF <- function(datasets=c("hTFtarget",
   ####ENCODE
   if ("ENCODE" %in% datasets){
     cat("Searching ENCODE .... \n")
-    showNotification("Searching ENCODE .... ",duration = 2)
+    if (isTRUE(app)){
+       showNotification("Searching ENCODE .... ",duration = 2)
+    }
     ENCODE <- get_data("ENCODE","Target",target)
     TF_result[["ENCODE"]] <- ENCODE %>% na.omit()
   }
@@ -160,7 +162,9 @@ predict_TF <- function(datasets=c("hTFtarget",
   ###"GTRD"
   if ("GTRD" %in% datasets){
     cat("Searching GTRD .... \n")
-    showNotification("Searching GTRD .... ",duration = 2)
+    if (isTRUE(app)){
+      showNotification("Searching GTRD .... ",duration = 2)
+    }
     GTRD <- get_data("GTRD","Target",target)
     TF_result[["GTRD"]] <- GTRD %>% na.omit()
   }
