@@ -323,19 +323,55 @@ server.modules_net <- function(input, output, session) {
                                      cor_cutoff = input$cor.threshold,
                                      app = T)
     }
-    all_results <- all_results %>% dplyr::filter(Target %in% volcano_data()$Symbol)
+    # 确保all_results不为空
+    if (is.null(all_results) || nrow(all_results) == 0) {
+      return(NULL)
+    }
+    
+    # 检查列名并进行适当的过滤
+    if ("Target" %in% colnames(all_results)) {
+      all_results <- all_results %>% 
+        dplyr::filter(Target %in% volcano_data()$Symbol)
+    }
+    
+    # 注意：这里不直接过滤TF，因为我们需要在网络构建时处理
     return(all_results)
   })
 
   output$network <- renderPlot(height = 600,{
 
     all_results <- na.omit(plot_data())
+    if (nrow(all_results) == 0) {
+      return(NULL)
+    }
+    
     colnames(all_results) <- c("from", "to")
     graph_gt <- as_tbl_graph(all_results)
-    nodes <- graph_gt %>% as.data.frame() %>% merge(.,volcano_data()[c("Symbol","logFC")] %>% unique(),by.x="name",by.y = "Symbol",all.x=T)
-    graph_gt <- graph_gt  %>%
-      mutate(logFC = nodes$logFC)
-
+    
+    # 提取所有节点并创建logFC映射
+    network_nodes <- unique(c(all_results$from, all_results$to))
+    volcano_data_subset <- volcano_data()[c("Symbol","logFC")] %>% unique()
+    
+    # 确保所有节点都有logFC值
+    node_logfc <- data.frame(
+      name = network_nodes,
+      logFC = sapply(network_nodes, function(x) {
+        fc <- volcano_data_subset$logFC[volcano_data_subset$Symbol == x]
+        if (length(fc) > 0) fc else NA
+      })
+    )
+    
+    # 移除没有logFC值的节点
+    node_logfc <- node_logfc %>% dplyr::filter(!is.na(logFC))
+    if (nrow(node_logfc) == 0) {
+      return(NULL)
+    }
+    
+    # 确保图中只包含有logFC值的节点
+    graph_gt <- graph_gt %>%
+      activate(nodes) %>%
+      filter(name %in% node_logfc$name) %>%
+      mutate(logFC = node_logfc$logFC[match(name, node_logfc$name)])
 
     ggraph(graph_gt, layout = input$layout) +
       geom_edge_fan(color="grey",show.legend=FALSE) +
@@ -343,7 +379,9 @@ server.modules_net <- function(input, output, session) {
       geom_node_text(aes(label=name),size=input$text_size,repel=TRUE)+
       theme_graph() +guides(size="none")+
       scale_fill_distiller(palette = "Spectral")+
-      theme(text = element_text(family = "Times"))
+      theme(text = element_text(family = "Times"),
+            legend.text = element_text(size = input$text_size * 3),
+            legend.title = element_text(size = input$text_size * 3))
 
   })
   output$download <- downloadHandler(
@@ -353,20 +391,47 @@ server.modules_net <- function(input, output, session) {
 
     content = function(file) {
       all_results <- na.omit(plot_data())
+      if (nrow(all_results) == 0) {
+        return(NULL)
+      }
+      
       colnames(all_results) <- c("from", "to")
       graph_gt <- as_tbl_graph(all_results)
-      nodes <- graph_gt %>% as.data.frame() %>% merge(.,volcano_data()[c("Symbol","logFC")] %>% unique(),by.x="name",by.y = "Symbol", all.x = T)
-      graph_gt <- graph_gt  %>%
-        mutate(logFC = nodes$logFC)
+      
+      # 提取所有节点并创建logFC映射
+      network_nodes <- unique(c(all_results$from, all_results$to))
+      volcano_data_subset <- volcano_data()[c("Symbol","logFC")] %>% unique()
+      
+      # 确保所有节点都有logFC值
+      node_logfc <- data.frame(
+        name = network_nodes,
+        logFC = sapply(network_nodes, function(x) {
+          fc <- volcano_data_subset$logFC[volcano_data_subset$Symbol == x]
+          if (length(fc) > 0) fc else NA
+        })
+      )
+      
+      # 移除没有logFC值的节点
+      node_logfc <- node_logfc %>% dplyr::filter(!is.na(logFC))
+      if (nrow(node_logfc) == 0) {
+        return(NULL)
+      }
+      
+      # 确保图中只包含有logFC值的节点
+      graph_gt <- graph_gt %>%
+        activate(nodes) %>%
+        filter(name %in% node_logfc$name) %>%
+        mutate(logFC = node_logfc$logFC[match(name, node_logfc$name)])
+      
       p <- ggraph(graph_gt, layout = input$layout) +
         geom_edge_fan(color="grey",show.legend=FALSE) +
         geom_node_point(aes(size = abs(logFC),fill = logFC),colour="black",shape=21)+
         geom_node_text(aes(label=name),size=input$text_size,repel=TRUE,max.overlaps=10)+
         theme_graph() +guides(size="none")+
         scale_fill_distiller(palette = "Spectral")+
-        theme(text = element_text(family = "Times"))
-
-
+        theme(text = element_text(family = "Times"),
+              legend.text = element_text(size = input$text_size * 3),
+              legend.title = element_text(size = input$text_size * 3))
 
       pdf(file, width = 8 ,height = 8)
       print(p)
