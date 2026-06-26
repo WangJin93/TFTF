@@ -1,47 +1,47 @@
-#' @title Plot venn diagram and folower plot
+#' @title Plot Venn Diagram for Differentially Expressed Genes
 #' @description
-#'  Plot venn diagram and folower plot to visualize the intersection of predicted results.
-#' @import dplyr VennDiagram RColorBrewer grid
-#' @param inter_data Intersection result obtained fron intersections() function.
-#' @param color_panel Color palette in RColorBrewer, default "Set1".
-#' @param font_size Default 1.
-#' @param lwd Line width, default 2.
-#' @param linetype "solid" = 1,"dashed" = 2, "dotted" = 3,"dot-dashed" = 4, "longdashed" = 5, "blank" = 0
+#' This function plots a Venn diagram for lists of differentially expressed genes (DEGs) across multiple datasets.
+#' @importFrom RColorBrewer brewer.pal
+#' @importFrom grid grid.newpage grid.draw
+#' @param results List of character vectors. Each vector contains DEGs for a specific dataset.
+#' @param fill_colors Character vector. Colors to fill the Venn diagram circles. Default is NULL, which uses a palette.
+#' @param palette Character. Name of the RColorBrewer palette to use if fill_colors is not specified. Default is "Set1".
+#' @param lty Numeric. Line type for the circles in the Venn diagram. Default is 2 (dashed line).
+#' @param ... Additional arguments passed to venn.diagram function.
+#' @return A list of intersected DEGs.
 #' @examples
 #' \dontrun{
-#' results <- predict_target(datasets=c("hTFtarget","KnockTF","FIMO_JASPAR","PWMEnrich_JASPAR"), cor_DB = c("TCGA","GTEx"),tf = "STAT3")
-#' results_inter <- intersections(results)
-#' plot_venn(results_inter)
+#' df1 <- get_OSF_data(table = "GSE31210", action = "geo_data")
+#' results1 <- DEGs_analysis(df1)
+#' df2 <- get_OSF_data(table = "GSE19188", action = "geo_data")
+#' results2 <- DEGs_analysis(df2)
+#' DEGs_lists <- list("GSE31210" = results1, "GSE19188" = results2)
+#' results <- get_DEGs_list(DEGs_lists)
+#' plot_venn(results$DEG_up, palette = "Set1")
+#' plot_venn(results$DEG_up, fill_colors = c("red", "green", "blue"), alpha = 0.5, cex = 1.5)
 #' }
 #' @export
-#'
-plot_venn <- function(inter_data,
-                      color_panel = "Set1",
-                      font_size = 1,
-                      lwd =2,
-                      linetype = 2){
-
-    if (length(dev.list()) > 0) {
-    dev.off()
-    }
-  dd <- which(names(inter_data)=="intersection")
-  if (length(dd)!=0){
-    inter_data <- inter_data[-which(names(inter_data)=="intersection")]
-  }
-  if (length(inter_data) < 6){
-    VD <- venn.diagram(inter_data, filename = NULL, fill = RColorBrewer::brewer.pal(length(inter_data), color_panel), cex = font_size,
-                       margin = 0.2, cat.cex = font_size, lwd = lwd,
-                       lty = rep(as.numeric(linetype), length(inter_data)))
-    grid.draw(VD)
-
-  }else{
-    flowerplot(inter_data,
-               ellipse_col_pal = color_panel,
-               circle_col = "white",
-               label_text_cex = font_size)
-
-
+plot_venn <- function(results, fill_colors = NULL, palette = "Set1", lty = 2, ...) {
+  if (!requireNamespace("VennDiagram", quietly = TRUE)) {
+    stop("The 'VennDiagram' package is required for this function. Please install it with: install.packages('VennDiagram')")
   }
 
+  # 确定数据集的数量
+  intersects <- Reduce(intersect, results)
+  grid::grid.newpage()
+  num_sets <- length(results)
 
+  # 使用RColorBrewer选择配色方案（如果未提供fill_colors参数）
+  if (is.null(fill_colors)) {
+    fill_colors <- RColorBrewer::brewer.pal(min(num_sets, RColorBrewer::brewer.pal.info[palette, "maxcolors"]), palette)
+  }
+
+  # 绘制Venn图，并传入其他参数
+  VD <- VennDiagram::venn.diagram(results, filename = NULL, fill = fill_colors[1:num_sets],
+                                  lty = rep(lty, num_sets), ...)
+
+  # 绘制Venn图
+  grid::grid.draw(VD)
+
+  return(intersects)
 }
