@@ -3,6 +3,8 @@
 #' Get the tissue types in "TCGA" or "GTEx" database
 #' @import dplyr
 #' @param db "TCGA" or "GTEx".
+#' @return A character vector of tissue/cancer type names (invisibly); the
+#' vector is also printed.
 #' @examples
 #' \dontrun{
 #' tissue_type("GTEx")
@@ -11,11 +13,14 @@
 #'
 tissue_type <- function(db = "TCGA"){
   if (db == "TCGA"){
-    print(tissue[,"TCGA"] %>% as.character())
+    res <- as.character(tissue[["TCGA"]])
   }else  if (db == "GTEx"){
-    print(tissue[,"GTEx"] %>% na.omit() %>% as.character())
+    res <- as.character(tissue[["GTEx"]])
+    res <- res[!is.na(res)]
   }else{
     cat("Only TCGA and GTEx supported!")
+    return(invisible(NULL))
   }
-
+  print(res)
+  invisible(res)
 }

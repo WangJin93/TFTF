@@ -13,7 +13,7 @@ Find_TF <- function(tf = "STAT3"){
     cat("The input TFs are not included in the TF list!")
   }else{
     df <- df %>% tibble::column_to_rownames(.,"TF")%>% t() %>% as.data.frame() %>% tibble::rownames_to_column(.,"Dataset")
-    df$All_in <- lapply(1:9,function(x) ifelse("F" %in% df[x,],"F","T"))
+    df$All_in <- lapply(seq_len(nrow(df)),function(x) ifelse("F" %in% df[x,],"F","T"))
     print(df)
     }
 }

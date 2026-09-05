@@ -1,15 +1,23 @@
 #' @title Pan-tissue correlation analysis
 #' @description
 #'  Correlation analysis between TF and target in pan-tissues in "TCGA", "GTEx" and "CCLE" databases.
-#' @import UCSCXenaShiny dplyr psych tibble
+#' @import dplyr psych tibble
 #' @param Gene1 Gene1 name.
 #' @param Gene2 Gene2 name.
 #' @param data_source Data source used for correlation analysis, e.g. "TCGA", "GTEx" and "CCLE".
 #' @param type Sample types used for correlation analysis, e.g. "normal" or/and "tumor".
 #' @param cor_method Method used for correlation analysis, e.g. "pearson", "spearman".
+#' @param use_cache Logical (default \code{TRUE}). When \code{TRUE}, per-gene
+#' expression data downloaded from the Xena servers are cached locally so that
+#' the same gene is downloaded only once (see \code{get_tftf_cache_dir()}).
+#' @param cache_dir Optional custom directory for the cache (default
+#' \code{NULL}, i.e. the active cache directory, see \code{set_tftf_cache_dir()}).
 #' @examples
 #' \dontrun{
 #' cor_results <- pantissue_cor_analysis(Gene1 = "FOXM1",Gene2 = "GAPDH")
+#' # running it again with the same genes is much faster because the per-gene
+#' # expression data are served from the local cache:
+#' cor_results2 <- pantissue_cor_analysis(Gene1 = "FOXM1",Gene2 = "GAPDH")
 #' }
 #' @export
 #'
@@ -17,15 +25,19 @@ pantissue_cor_analysis <- function(Gene1 = "FOXM1",
                          Gene2 = "GAPDH",
                          data_source = "TCGA",
                          type = c("normal","tumor"),
-                         cor_method = "pearson") {
+                         cor_method = "pearson",
+                         use_cache = TRUE,
+                         cache_dir = NULL) {
   if (data_source != "CCLE"){
     tcga_gtex <- TFTF::tcga_gtex %>%
       dplyr::group_by(.data$tissue) %>%
       dplyr::distinct(.data$sample, .keep_all = TRUE)
 
-    t1 <- query_pancan_value(Gene1, data_type = "mRNA")
+    t1 <- .tftf_xena_query_cached(Gene1, data_type = "mRNA", database = "toil",
+                                  use_cache = use_cache, cache_dir = cache_dir)
     if (is.list(t1)) t1 <- t1[[1]]
-    t3 <- query_pancan_value(Gene2, data_type = "mRNA")
+    t3 <- .tftf_xena_query_cached(Gene2, data_type = "mRNA", database = "toil",
+                                  use_cache = use_cache, cache_dir = cache_dir)
     if (is.list(t3)) t3 <- t3[[1]]
     if (all(is.na(t1))){
       # showModal(modalDialog(
@@ -67,7 +79,8 @@ pantissue_cor_analysis <- function(Gene1 = "FOXM1",
     )
     colnames(df)[5:6] <- c(Gene1,Gene2)
   }else{
-    t1 <- query_pancan_value(Gene1, data_type = "mRNA", database = "ccle")
+    t1 <- .tftf_xena_query_cached(Gene1, data_type = "mRNA", database = "ccle",
+                                  use_cache = use_cache, cache_dir = cache_dir)
     if (is.list(t1)) t1 <- t1[[1]]
     t1 <- log2(t1 + 1)
     if (all(is.na(t1))) {
@@ -81,7 +94,8 @@ pantissue_cor_analysis <- function(Gene1 = "FOXM1",
       tibble::rownames_to_column(var = "cell") %>%
       dplyr::inner_join(ccle_info, by = c("cell" = "CCLE_name"))
 
-    t3 <- query_pancan_value(Gene2, data_type = "mRNA", database = "ccle")
+    t3 <- .tftf_xena_query_cached(Gene2, data_type = "mRNA", database = "ccle",
+                                  use_cache = use_cache, cache_dir = cache_dir)
     if (is.list(t3)) t3 <- t3[[1]]
     t3 <- log2(t3 + 1)
     if (all(is.na(t3))) {
@@ -142,5 +156,4 @@ pantissue_cor_analysis <- function(Gene1 = "FOXM1",
   return(list(cor_data = df,
               cor_result = output))
 }
-
 

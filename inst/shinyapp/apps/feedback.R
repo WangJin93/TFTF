@@ -116,25 +116,71 @@ mod_feedback_server <- function(input, output, session){
     }
     
     # submit issue
-    send.mail(from = 'jin.wang93@qq.com',
-              to = c('jin.wang93@outlook.com'),
-              subject= paste0(input$issue_title," & ", input$issue_labels),
-              body=input$issue_description, 
-              smtp=list(host.name='smtp.qq.com',
-                        port=465,                          
-                        user.name='jin.wang93@qq.com',   
-                        passwd='pkwnnnwhtorubddj',         
-                        ssl=T),  
-              authenticate = T,
-              send = T)
-    
+    # Security note: never embed email credentials in source code. The SMTP
+    # account/password are read from environment variables (or options) and
+    # must be configured on the deployment machine, e.g.:
+    #   Sys.setenv(TFTF_MAIL_FROM = "you@qq.com",
+    #              TFTF_MAIL_USER = "you@qq.com",
+    #              TFTF_MAIL_PASS = "<smtp authorization code>",
+    #              TFTF_MAIL_TO   = "admin@example.com")
+    mail_pass <- Sys.getenv("TFTF_MAIL_PASS", unset = getOption("TFTF.mail_pass", ""))
+    mail_user <- Sys.getenv("TFTF_MAIL_USER", unset = getOption("TFTF.mail_user", ""))
+
+    if (!nzchar(mail_pass) || !nzchar(mail_user)) {
+      shinyWidgets::sendSweetAlert(
+        session = session,
+        title = "Not configured",
+        text = "Email sending is not configured on this server. Please report the issue at https://github.com/WangJin93/TFTF/issues instead.",
+        type = "warning"
+      )
+      return(NULL)
+    }
+
+    if (!requireNamespace("mailR", quietly = TRUE)) {
+      shinyWidgets::sendSweetAlert(
+        session = session,
+        title = "Not available",
+        text = "The 'mailR' package is required to send emails but is not installed.",
+        type = "error"
+      )
+      return(NULL)
+    }
+
+    mail_to <- Sys.getenv("TFTF_MAIL_TO", unset = getOption("TFTF.mail_to", mail_user))
+    ok <- tryCatch({
+      mailR::send.mail(from = mail_user,
+                       to = mail_to,
+                       subject = paste0(input$issue_title, " & ", input$issue_labels),
+                       body = input$issue_description,
+                       smtp = list(host.name = Sys.getenv("TFTF_MAIL_SMTP", "smtp.qq.com"),
+                                   port = as.integer(Sys.getenv("TFTF_MAIL_PORT", "465")),
+                                   user.name = mail_user,
+                                   passwd = mail_pass,
+                                   ssl = TRUE),
+                       authenticate = TRUE,
+                       send = TRUE)
+      TRUE
+    }, error = function(e) {
+      message("Failed to send feedback email: ", conditionMessage(e))
+      FALSE
+    })
+
     # show confirmation
-    shinyWidgets::sendSweetAlert(
-      session = session,
-      title = "Issue Submitted!",
-      text = "Thank you for your feedback! Your issue has been submitted to the shinylego issue tracker. One of the maintainers will review your issue and contact you for additional details.",
-      type = "success"
-    )
+    if (ok) {
+      shinyWidgets::sendSweetAlert(
+        session = session,
+        title = "Issue Submitted!",
+        text = "Thank you for your feedback! Your issue has been sent. One of the maintainers will review your issue and contact you for additional details.",
+        type = "success"
+      )
+    } else {
+      shinyWidgets::sendSweetAlert(
+        session = session,
+        title = "Sending failed",
+        text = "Sorry, the email could not be sent. Please report the issue at https://github.com/WangJin93/TFTF/issues instead.",
+        type = "error"
+      )
+    }
     
     # reset key inputs
     updateTextInput(

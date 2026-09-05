@@ -1,0 +1,18 @@
+# ---- R / RStudio ----
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj
+
+# ---- package build artefacts ----
+*.tar.gz
+*.Rcheck/
+src/*.o
+src/*.so
+
+# ---- plotting artefacts ----
+Rplots.pdf
+VennDiagram*.log
+
+# ---- user caches / temp ----
+.cache/

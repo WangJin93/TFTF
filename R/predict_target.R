@@ -6,7 +6,7 @@
 #' @param tf Transcription factor name
 #' @param TCGA_tissue Cancer type in TCGA database, you can use tissue_type("TCGA") to abtain the tissue types.
 #' @param GTEx_tissue Cancer type in GTEx database, you can use tissue_type("GTEx") to abtain the tissue types.
-#' @param cor_DB The database used for the correlation analyze between TF and targets. You can use 2 databases, viz. TCGA (33 cancer types) and GTEx (31 normal tissue types).
+#' @param cor_DB The database used for the correlation analyze between TF and targets. You can use 2 databases, viz. TCGA (33 cancer types) and GTEx (30 normal tissue types).
 #' @param cor_cutoff Threshold of correlation coefficient for correlation analysis.
 #' @param FIMO.score Threshold of the score of the prediction TF-target results by using FIMO algorithm (bigger is better), default 10.
 #' @param PWMEnrich.p Threshold of the p value of the prediction TF-target results by using PWMEnrich algorithm (smaller is better), default 0.10.
@@ -38,7 +38,6 @@ predict_target <- function(datasets=c("hTFtarget",
                            cut.log2FC = 1,
                            down.only = T,
                            app = F){
-  options(timeout=200)
   targets <- as.list(datasets)
   names(targets) <- datasets
 

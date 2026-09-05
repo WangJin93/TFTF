@@ -3,7 +3,12 @@
 #' Plotting the folower plot for visualizing the intersection of more than 5 datasets.
 #' @import RColorBrewer plotrix
 #' @param flower_dat List of data.
+#' @param angle Start angle of the first ellipse (degrees), default 90.
+#' @param a Semi-major axis of the ellipses, default 1.
+#' @param b Semi-minor axis of the ellipses, default 2.
+#' @param r Radius of the central circle, default 1.
 #' @param ellipse_col_pal Color palette in RColorBrewer, default "Set1".
+#' @param circle_col Fill color of the central circle, default "white".
 #' @param label_text_cex Font size, default 1.
 #' @export
 #'

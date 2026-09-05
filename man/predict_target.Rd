@@ -28,7 +28,7 @@ predict_target(
 
 \item{GTEx_tissue}{Cancer type in GTEx database, you can use tissue_type("GTEx") to abtain the tissue types.}
 
-\item{cor_DB}{The database used for the correlation analyze between TF and targets. You can use 2 databases, viz. TCGA (33 cancer types) and GTEx (31 normal tissue types).}
+\item{cor_DB}{The database used for the correlation analyze between TF and targets. You can use 2 databases, viz. TCGA (33 cancer types) and GTEx (30 normal tissue types).}
 
 \item{cor_cutoff}{Threshold of correlation coefficient for correlation analysis.}
 

@@ -12,7 +12,7 @@ TF_Target_batch(
   cor_DB = c("TCGA", "GTEx"),
   cor_cutoff = 0.3,
   FIMO.score = 10,
-  PWMEnrich.p = 10,
+  PWMEnrich.p = 0.1,
   cut.log2FC = 1,
   down.only = T,
   app = F
@@ -27,13 +27,13 @@ TF_Target_batch(
 
 \item{GTEx_tissue}{Cancer type in GTEx database, you can use tissue_type("GTEx") to abtain the tissue types.}
 
-\item{cor_DB}{The database used for the correlation analyze between TF and targets. You can use 2 databases, viz. TCGA (33 cancer types) and GTEx (31 normal tissue types).}
+\item{cor_DB}{The database used for the correlation analyze between TF and targets. You can use 2 databases, viz. TCGA (33 cancer types) and GTEx (30 normal tissue types).}
 
 \item{cor_cutoff}{Threshold of correlation coefficient for correlation analysis.}
 
 \item{FIMO.score}{Threshold of the score of the prediction TF-target results by using FIMO algorithm.}
 
-\item{PWMEnrich.p}{Threshold of the score of the prediction TF-target results by using PWMEnrich algorithm..}
+\item{PWMEnrich.p}{Threshold of the p value of the prediction TF-target results by using PWMEnrich algorithm (smaller is better), default 0.1.}
 
 \item{cut.log2FC}{Threshold of log2FC for KnockTF dataset.}
 

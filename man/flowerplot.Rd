@@ -18,7 +18,17 @@ flowerplot(
 \arguments{
 \item{flower_dat}{List of data.}
 
+\item{angle}{Start angle of the first ellipse (degrees), default 90.}
+
+\item{a}{Semi-major axis of the ellipses, default 1.}
+
+\item{b}{Semi-minor axis of the ellipses, default 2.}
+
+\item{r}{Radius of the central circle, default 1.}
+
 \item{ellipse_col_pal}{Color palette in RColorBrewer, default "Set1".}
+
+\item{circle_col}{Fill color of the central circle, default "white".}
 
 \item{label_text_cex}{Font size, default 1.}
 }

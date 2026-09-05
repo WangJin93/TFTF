@@ -50,6 +50,23 @@ FIMO (Find Individual Motif Occurrences) is a tool used to identify individual m
 
 devtools::install_github("WangJin93/TFTF")
 
+## 4.1.1 Local cache of downloaded data
+
+To avoid querying the same data from the servers again and again, all data downloads are cached locally following the design of the GCAS package. Each query (TF-target search against the TFTF API, and per-gene expression queries against the Xena servers) is stored as an `.rds` file in a per-user cache directory, and the built-in Shiny app automatically benefits from it:
+
+```R
+get_tftf_cache_dir()              # location of the cache, e.g. ~/.cache/TFTF/data_temp
+set_tftf_cache_dir("~/TFTF_cache")# use a custom cache directory
+set_tftf_cache_dir(NULL)          # reset to the default directory
+
+# Data are downloaded only once; identical later queries hit the cache:
+res1 <- get_data(table = "ENCODE", searchType = "Target", gene = "GAPDH")
+res2 <- get_data(table = "ENCODE", searchType = "Target", gene = "GAPDH") # served from cache
+res3 <- get_data(table = "ENCODE", searchType = "Target", gene = "GAPDH", refresh = TRUE) # force re-download
+
+clear_tftf_cache()                # delete all cached files
+```
+
 ## 4.2 Introduction to Data and Basic Functions
 
 View the list of transcription factors included in this R package and their coverage across all datasets. We only include transcription factors that are present in at least 2 datasets out of nine, resulting in a total of 1575 transcription factors.

@@ -6,10 +6,10 @@
 #' @param tfs Transcription factor names
 #' @param TCGA_tissue Cancer type in TCGA database, you can use tissue_type("TCGA") to abtain the tissue types.
 #' @param GTEx_tissue Cancer type in GTEx database, you can use tissue_type("GTEx") to abtain the tissue types.
-#' @param cor_DB The database used for the correlation analyze between TF and targets. You can use 2 databases, viz. TCGA (33 cancer types) and GTEx (31 normal tissue types).
+#' @param cor_DB The database used for the correlation analyze between TF and targets. You can use 2 databases, viz. TCGA (33 cancer types) and GTEx (30 normal tissue types).
 #' @param cor_cutoff Threshold of correlation coefficient for correlation analysis.
 #' @param FIMO.score Threshold of the score of the prediction TF-target results by using FIMO algorithm.
-#' @param PWMEnrich.p Threshold of the score of the prediction TF-target results by using PWMEnrich algorithm..
+#' @param PWMEnrich.p Threshold of the p value of the prediction TF-target results by using PWMEnrich algorithm (smaller is better), default 0.1.
 #' @param cut.log2FC Threshold of log2FC for KnockTF dataset.
 #' @param down.only Logic value. If true, only the downregulated genes in TF knockout/knockdown cells were returned in KnockTF dataset.
 #' @param app Logic value. TRUE only used in the shiny app.
@@ -26,7 +26,7 @@ TF_Target_batch <- function(datasets=c("FIMO_JASPAR"),
                             cor_DB = c("TCGA","GTEx"),
                             cor_cutoff = 0.3,
                             FIMO.score=10,
-                            PWMEnrich.p =10,
+                            PWMEnrich.p =0.1,
                             cut.log2FC = 1,
                             down.only = T,
                             app = F){
@@ -51,7 +51,13 @@ TF_Target_batch <- function(datasets=c("FIMO_JASPAR"),
                          }
                          )
   )
-  all_results <- all_results[which(all_results$Target != "None"),]
+  # protect against the case where no TF produced any prediction
+  if (is.null(all_results) || nrow(all_results) == 0){
+    message("No target genes were predicted for the input TFs with the current parameters.")
+    return(data.frame(tf = character(0), Target = character(0),
+                      stringsAsFactors = FALSE))
+  }
+  all_results <- all_results[which(all_results$Target != "None"), , drop = FALSE]
   return(all_results)
 
 }

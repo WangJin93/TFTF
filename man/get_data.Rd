@@ -4,20 +4,46 @@
 \alias{get_data}
 \title{Get TF-target data}
 \usage{
-get_data(table = "ENCODE", searchType = "Target", gene = "GAPDH")
+get_data(
+  table = "ENCODE",
+  searchType = "Target",
+  gene = "GAPDH",
+  use_cache = TRUE,
+  refresh = FALSE,
+  cache_dir = NULL,
+  timeout = 120,
+  api_url = NULL,
+  quiet = FALSE
+)
 }
 \arguments{
 \item{table}{One of the dataset in "hTFtarget","KnockTF","FIMO_JASPAR","PWMEnrich_JASPAR","ENCODE","CHEA","TRRUST","GTRD","ChIP_Atlas". For correlation analysis, "cor_"+tissue type was the table name, i.e. cor_TCGA, cor_Lung.}
 
 \item{searchType}{TF or Target.}
 
-\item{gene}{Any TF names for searchType == TF, and any gene symbols for searchType == Target}
+\item{gene}{Any TF names for searchType == TF, and any gene symbols for searchType == Target.}
+
+\item{use_cache}{Logical (default \code{TRUE}). When \code{TRUE}, results of previous identical queries are returned from the local cache (memory first, then disk) and no request is sent to the server.}
+
+\item{refresh}{Logical (default \code{FALSE}). When \code{TRUE}, the data are re-downloaded from the server and the cache is updated, even if a cached copy exists.}
+
+\item{cache_dir}{Optional custom directory for the cache (default \code{NULL}, i.e. the active cache directory, see \code{set_tftf_cache_dir()}).}
+
+\item{timeout}{Time in seconds allowed for the server request (default 120).}
+
+\item{api_url}{Optional custom API base URL. \code{NULL} (default) uses \code{https://www.jingege.wang/TFTF/api.php}.}
+
+\item{quiet}{Logical (default \code{FALSE}). Suppress progress messages about cache reads/writes and downloads.}
 }
 \description{
-Get the TF-target targeting results by using the api. All results saved in MySQL database.
+Get the TF-target targeting results by using the TFTF API (results stored in a MySQL database on the server side). Downloaded data are cached locally following the design of the GCAS package (see \code{get_tftf_cache_dir()}), so repeated identical queries are answered from the cache instead of hitting the server again.
 }
 \examples{
 \dontrun{
 results <- get_data(table = "ENCODE", searchType = "Target", gene = "GAPDH")
+# the second call is served from the local cache, no request is sent:
+results2 <- get_data(table = "ENCODE", searchType = "Target", gene = "GAPDH")
+# force re-download:
+results3 <- get_data(table = "ENCODE", searchType = "Target", gene = "GAPDH", refresh = TRUE)
 }
 }
