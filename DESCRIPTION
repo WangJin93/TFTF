@@ -1,7 +1,7 @@
 Package: TFTF
 Type: Package
 Title: Transcription Factor Target Prediction and Inverse Prediction R Package
-Version: 0.2.0
+Version: 0.2.1
 Author: Jin Wang
 Maintainer: Jin Wang <jin.wang93@outlook.com>
 URL: https://github.com/WangJin93/TFTF

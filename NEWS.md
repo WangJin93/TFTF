@@ -1,5 +1,10 @@
 # TFTF changelog
 
+## TFTF 0.2.1 (2025-09)
+
+### Bug fixes
+- `TFTF_app()` failed on case-sensitive file systems ("path[1]=\"\": no such file or directory"): the bundled Shiny entry file was named `app.R` while the launcher looked for `App.R`. The file has been renamed to `App.R` and `TFTF_app()` now resolves it with a case-insensitive fallback plus an informative error if the app files are missing.
+
 ## TFTF 0.2.0 (2025-09)
 
 ### New features
